@@ -1,3 +1,38 @@
 import { Api } from "../api";
+import express, { Express } from "express";
+import { Route } from "./routes/route.express";
+import CookieParser from "cookie-parser"
 
-export class ApiExpress implements Api {}
+export class ApiExpress implements Api {
+    private app: Express;
+
+    private constructor(routes: Route[]) {
+        this.app = express();
+
+        this.app.use(express.json());
+        this.app.use(CookieParser());
+
+        this.addRoutes(routes);
+    };
+
+    public static build(routes: Route[]) {
+        return new ApiExpress(routes);
+    };
+
+    private addRoutes(routes: Route[]) {
+        routes.forEach(route => {
+           const method = route.getMethod();
+           const handler = route.getHandler()
+           const path = route.getPath()
+           const middlewares = route.getMiddlewares();
+
+           this.app[method](path, ...middlewares, handler)
+        });
+    };
+
+    public start(port: number): void {
+        this.app.listen(port, () => {
+            console.log("http server is running in port: ", port)
+        })
+    }
+}
