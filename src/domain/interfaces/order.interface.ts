@@ -2,7 +2,7 @@ import { OrderEntity } from "../entities/order.entity";
 import { Status } from "../enum/status.enum";
 
 export type ListOrderOutput = {
-    orders: OrderEntity;
+    orders: OrderEntity[];
     totalItems: number;
     totalPages: number;
     page: number;
