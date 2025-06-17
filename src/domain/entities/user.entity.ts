@@ -1,6 +1,6 @@
-import dateGenerate from "../../package/patterns/date-generate";
-import generateId from "../../package/patterns/generate-id";
-import hashPattern from "../../package/patterns/hash-pattern";
+import GenerateDate from "../../package/patterns/date-generate";
+import GenerateUUID from "../../package/patterns/generate-id";
+import HashPattern from "../../package/patterns/hash-pattern";
 import { Role } from "../enum/role.enum";
 
 type User = {
@@ -24,14 +24,14 @@ export class UserEntity {
     password: string
   ) {
     return new UserEntity({
-      id: generateId.generate(),
+      id: GenerateUUID.uuid(),
       username,
       firstName,
       lastName,
-      password: await hashPattern.hash(password),
+      password: await HashPattern.hash(password),
       role: Role.USER,
-      createdAt: dateGenerate.generate(),
-      updatedAt: dateGenerate.generate(),
+      createdAt: GenerateDate.now(),
+      updatedAt: GenerateDate.now(),
     });
   }
 

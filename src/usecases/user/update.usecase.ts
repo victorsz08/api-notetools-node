@@ -1,7 +1,5 @@
 import { UserInterface } from "../../domain/interfaces/user.interface";
-import { HttpException } from "../../package/http-exceptions/http-exception";
-import { StatusCode } from "../../package/http-exceptions/http-status-code";
-import dateGenerate from "../../package/patterns/date-generate";
+import GenerateDate from "../../package/patterns/date-generate";
 import { Usecase } from "../usecase";
 
 export type UpdateUserInputDto = {
@@ -20,7 +18,7 @@ export class UpdateUserUsecase
 
     public async execute(input: UpdateUserInputDto): Promise<void> {
         const { id, username, firstName, lastName } = input;
-        const updatedAt = dateGenerate.generate();
+        const updatedAt = GenerateDate.now();
 
         await this.userInterface.update(
             id,

@@ -1,9 +1,9 @@
 import { v4 as uuid } from "uuid";
 
-class GenerateId {
-  public generate(): string {
+class GenerateUUID {
+  public uuid(): string {
     return uuid();
   }
 }
 
-export default new GenerateId();
+export default new GenerateUUID();

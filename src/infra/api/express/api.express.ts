@@ -2,6 +2,8 @@ import { Api } from "../api";
 import express, { Express } from "express";
 import { Route } from "./routes/route.express";
 import CookieParser from "cookie-parser"
+import { HttpHandlerError } from "../../../middleware/http-handler-error";
+import cors from "cors";
 
 export class ApiExpress implements Api {
     private app: Express;
@@ -9,10 +11,18 @@ export class ApiExpress implements Api {
     private constructor(routes: Route[]) {
         this.app = express();
 
+        this.app.use(cors({
+            origin: "http://localhost:3000",
+            credentials: true,
+            allowedHeaders: ["Content-Type", "Authorization"],
+            methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        }));
+
         this.app.use(express.json());
         this.app.use(CookieParser());
 
         this.addRoutes(routes);
+        this.app.use(HttpHandlerError);
     };
 
     public static build(routes: Route[]) {
