@@ -4,12 +4,14 @@ import { ListUserUsecase } from "../../../../../usecases/user/list.usecase";
 import { listUserSchema } from "../../../../../validators/user.validator";
 import { Logger } from "../../../../../middleware/logger";
 import { ValidateSchema } from "../../../../../middleware/validate-schemas";
+import { Guard } from "../../../../../middleware/guard";
+import { Role } from "../../../../../domain/enum/role.enum";
 
 export class ListUserRoute implements Route {
     private constructor(
         private readonly path: string,
         private readonly method: HttpMethod,
-        private readonly listUserUsecase: ListUserUsecase
+        private readonly listUserUsecase: ListUserUsecase,
     ) {}
 
     public static build(listUserUsecase: ListUserUsecase) {
@@ -37,8 +39,8 @@ export class ListUserRoute implements Route {
     public getMiddlewares(): ((
         req: Request,
         res: Response,
-        next: NextFunction
+        next: NextFunction,
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(listUserSchema)];
+        return [Logger(), ValidateSchema(listUserSchema), Guard(Role.ADMIN)];
     }
 }

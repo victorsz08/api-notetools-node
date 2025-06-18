@@ -4,6 +4,7 @@ import { Route } from "./routes/route.express";
 import CookieParser from "cookie-parser";
 import { HttpHandlerError } from "../../../middleware/http-handler-error";
 import cors from "cors";
+import { rateLimit } from "express-rate-limit";
 
 export class ApiExpress implements Api {
     private app: Express;
@@ -17,7 +18,16 @@ export class ApiExpress implements Api {
                 credentials: true,
                 allowedHeaders: ["Content-Type", "Authorization"],
                 methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-            })
+            }),
+        );
+
+        this.app.use(
+            rateLimit({
+                windowMs: 15 * 60 * 1000, // 15min,
+                limit: 25,
+                standardHeaders: "draft-8",
+                legacyHeaders: false,
+            }),
         );
 
         this.app.use(express.json());
