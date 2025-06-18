@@ -32,13 +32,27 @@ import { DeleteUserRoute } from "../infra/api/express/routes/user/delete.route.e
 import { AuthLoginRoute } from "../infra/api/express/routes/auth/login.route.express";
 import { AuthLogoutRoute } from "../infra/api/express/routes/auth/logout.route.express";
 import { AuthSessionRoute } from "../infra/api/express/routes/auth/session.route.express";
+import { NoteRepository } from "../infra/repositories/note.repository.prisma";
+import { CreateNoteUsecase } from "../usecases/note/create.usecase";
+import { FindNoteUsecase } from "../usecases/note/find.usecase";
+import { ListNoteUsecase } from "../usecases/note/list.usecase";
+import { UpdateNoteUsecase } from "../usecases/note/update.usecase";
+import { DeleteNoteUsecase } from "../usecases/note/delete.usecase";
+import { CreateNoteRoute } from "../infra/api/express/routes/note/create.route.express";
+import { FindNoteRoute } from "../infra/api/express/routes/note/find.route.express";
+import { ListNoteRoute } from "../infra/api/express/routes/note/list.route.express";
+import { UpdateNoteRoute } from "../infra/api/express/routes/note/update.route.express";
+import { DeleteNoteRoute } from "../infra/api/express/routes/note/delete.route.express";
 
 // repositories
 const userRepository = UserRepository.build(prisma);
 const orderRepository = OrderRepository.build(prisma);
 const authRepository = AuthRepository.build(prisma);
+const noteRepository = NoteRepository.build(prisma);
 
 // usecases
+
+// orders
 const createOrderUsecase = CreateOrderUsecase.build(orderRepository);
 const findOrderUsecase = FindOrderUsecase.build(orderRepository);
 const listOrderUsecase = ListOrderUsecase.build(orderRepository);
@@ -47,6 +61,7 @@ const updateStatusUseacse = UpdateStatusUsecase.build(orderRepository);
 const updateSchedulingUsecase = UpdateSchedulingUsecase.build(orderRepository);
 const deleteOrderUsecase = DeleteOrderUsecase.build(orderRepository);
 
+// users
 const createUserUsecase = CreateUserUsecase.build(userRepository);
 const findUserUsecase = FindUserUsecase.build(userRepository);
 const listUserUsecase = ListUserUsecase.build(userRepository);
@@ -54,19 +69,30 @@ const updateUserUsecase = UpdateUserUsecase.build(userRepository);
 const updatePasswordUsecase = UpdatePasswordUsecase.build(userRepository);
 const deleteUserUsecase = DeleteUserUsecase.build(userRepository);
 
+// auth
 const authLoginUsecase = AuthLoginUsecase.build(authRepository);
 
+// notes
+const createNoteUsecase = CreateNoteUsecase.build(noteRepository);
+const findNoteUsecase = FindNoteUsecase.build(noteRepository);
+const listNoteUsecase = ListNoteUsecase.build(noteRepository);
+const updateNoteUsecase = UpdateNoteUsecase.build(noteRepository);
+const deleteNoteUsecase = DeleteNoteUsecase.build(noteRepository);
+
 // routes
+
+// orders
 const createOrderRoute = CreateOrderRoute.build(createOrderUsecase);
 const findOrderRoute = FindOrderRoute.build(findOrderUsecase);
 const listOrderRoute = ListOrderRoute.build(listOrderUsecase);
 const updateOrderRoute = UpdateOrderRoute.build(updateOrderUsecase);
 const updateStatusRoute = UpdateStatusRoute.build(updateStatusUseacse);
 const updateSchedulingRoute = UpdateSchedulingRoute.build(
-    updateSchedulingUsecase
+    updateSchedulingUsecase,
 );
 const deleteOrderRoute = DeleteOrderRoute.build(deleteOrderUsecase);
 
+// users
 const createUserRoute = CreateUserRoute.build(createUserUsecase);
 const findUserRoute = FindUserRoute.build(findUserUsecase);
 const listUserRoute = ListUserRoute.build(listUserUsecase);
@@ -74,9 +100,17 @@ const updateUserRoute = UpdateUserRoute.build(updateUserUsecase);
 const updatePasswordRoute = UpdatePasswordRoute.build(updatePasswordUsecase);
 const deleteUserRoute = DeleteUserRoute.build(deleteUserUsecase);
 
+// auths
 const authLoginRoute = AuthLoginRoute.build(authLoginUsecase);
 const authLogoutRoute = AuthLogoutRoute.build();
 const authSessionRoute = AuthSessionRoute.build();
+
+// notes
+const createNoteRoute = CreateNoteRoute.build(createNoteUsecase);
+const findNoteRoute = FindNoteRoute.build(findNoteUsecase);
+const listNoteRoute = ListNoteRoute.build(listNoteUsecase);
+const updateNoteRoute = UpdateNoteRoute.build(updateNoteUsecase);
+const deleteNoteRoute = DeleteNoteRoute.build(deleteNoteUsecase);
 
 export const routes = [
     createOrderRoute,
@@ -95,4 +129,9 @@ export const routes = [
     authLoginRoute,
     authLogoutRoute,
     authSessionRoute,
+    createNoteRoute,
+    findNoteRoute,
+    listNoteRoute,
+    updateNoteRoute,
+    deleteNoteRoute,
 ];
