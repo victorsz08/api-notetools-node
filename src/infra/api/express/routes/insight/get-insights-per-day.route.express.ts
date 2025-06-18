@@ -1,22 +1,22 @@
 import { NextFunction, Request, Response } from "express";
-import { GetInsightUsecase } from "../../../../../usecases/insight/get-insight.usecase";
+import { GetInsightPerDayUsecase } from "../../../../../usecases/insight/get-insight-per-day.usecase";
 import { HttpMethod, Route } from "../route.express";
 import { getInsightSchema } from "../../../../../validators/insight.validator";
 import { Logger } from "../../../../../middleware/logger";
 import { ValidateSchema } from "../../../../../middleware/validate-schemas";
 
-export class GetInsightRoute implements Route {
+export class GetInsightPerDayRoute implements Route {
     private constructor(
         private readonly path: string,
         private readonly method: HttpMethod,
-        private readonly getInsightUsecase: GetInsightUsecase,
+        private readonly getInsightPerDayUsecase: GetInsightPerDayUsecase,
     ) {}
 
-    public static build(getInsightUsecase: GetInsightUsecase) {
-        return new GetInsightRoute(
-            "/insights/:userId",
+    public static build(getInsightPerDayUsecase: GetInsightPerDayUsecase) {
+        return new GetInsightPerDayRoute(
+            "/insights/per-day/:userId",
             HttpMethod.GET,
-            getInsightUsecase,
+            getInsightPerDayUsecase,
         );
     }
 
@@ -26,7 +26,7 @@ export class GetInsightRoute implements Route {
             const body = req.body;
 
             const input = getInsightSchema.parse({ userId, ...body });
-            const data = await this.getInsightUsecase.execute(input);
+            const data = await this.getInsightPerDayUsecase.execute(input);
 
             return res.status(200).json(data);
         };

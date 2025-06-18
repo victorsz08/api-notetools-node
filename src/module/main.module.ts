@@ -43,12 +43,20 @@ import { FindNoteRoute } from "../infra/api/express/routes/note/find.route.expre
 import { ListNoteRoute } from "../infra/api/express/routes/note/list.route.express";
 import { UpdateNoteRoute } from "../infra/api/express/routes/note/update.route.express";
 import { DeleteNoteRoute } from "../infra/api/express/routes/note/delete.route.express";
+import { InsightRepository } from "../infra/repositories/insight.repository.prisma";
+import { GetInsightUsecase } from "../usecases/insight/get-insight.usecase";
+import { GetStatusInsightUsecase } from "../usecases/insight/get-status-insight.usecase";
+import { GetInsightPerDayUsecase } from "../usecases/insight/get-insight-per-day.usecase";
+import { GetInsightRoute } from "../infra/api/express/routes/insight/get-insight.route.express";
+import { GetStatusInsightRoute } from "../infra/api/express/routes/insight/get-status-insight.route.express";
+import { GetInsightPerDayRoute } from "../infra/api/express/routes/insight/get-insights-per-day.route.express";
 
 // repositories
 const userRepository = UserRepository.build(prisma);
 const orderRepository = OrderRepository.build(prisma);
 const authRepository = AuthRepository.build(prisma);
 const noteRepository = NoteRepository.build(prisma);
+const insightRepository = InsightRepository.build(prisma);
 
 // usecases
 
@@ -78,6 +86,13 @@ const findNoteUsecase = FindNoteUsecase.build(noteRepository);
 const listNoteUsecase = ListNoteUsecase.build(noteRepository);
 const updateNoteUsecase = UpdateNoteUsecase.build(noteRepository);
 const deleteNoteUsecase = DeleteNoteUsecase.build(noteRepository);
+
+// insights
+const getInsightUsecase = GetInsightUsecase.build(insightRepository);
+const getStatusInsightsUsecase =
+    GetStatusInsightUsecase.build(insightRepository);
+const getInsightPerDayUsecase =
+    GetInsightPerDayUsecase.build(insightRepository);
 
 // routes
 
@@ -112,6 +127,15 @@ const listNoteRoute = ListNoteRoute.build(listNoteUsecase);
 const updateNoteRoute = UpdateNoteRoute.build(updateNoteUsecase);
 const deleteNoteRoute = DeleteNoteRoute.build(deleteNoteUsecase);
 
+// insights
+const getInsightRoute = GetInsightRoute.build(getInsightUsecase);
+const getStatusInsightRoute = GetStatusInsightRoute.build(
+    getStatusInsightsUsecase,
+);
+const getInsightPerDayRoute = GetInsightPerDayRoute.build(
+    getInsightPerDayUsecase,
+);
+
 export const routes = [
     createOrderRoute,
     findOrderRoute,
@@ -134,4 +158,7 @@ export const routes = [
     listNoteRoute,
     updateNoteRoute,
     deleteNoteRoute,
+    getInsightRoute,
+    getStatusInsightRoute,
+    getInsightPerDayRoute,
 ];
