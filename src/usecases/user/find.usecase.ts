@@ -21,6 +21,10 @@ export class FindUserUsecase
 {
     private constructor(private readonly userInterface: UserInterface) {}
 
+    public static build(userInterface: UserInterface): FindUserUsecase {
+        return new FindUserUsecase(userInterface);
+    }
+
     public async execute(input: FindUserInputDto): Promise<FindUserOutputDto> {
         const { id } = input;
 

@@ -1,32 +1,31 @@
 import { Request, Response, NextFunction } from "express";
 import { HttpMethod, Route } from "../route.express";
-import { UpdatePasswordUsecase } from "../../../../../usecases/user/update-password.usecase";
-import { updatePasswordSchema } from "../../../../../validators/user.validator";
+import { DeleteOrderUsecase } from "../../../../../usecases/order/delete.usecase";
+import { findOrderSchema } from "../../../../../validators/order.validator";
 import { Logger } from "../../../../../middleware/logger";
 import { ValidateSchema } from "../../../../../middleware/validate-schemas";
 
-export class UpdatePasswordRoute implements Route {
+export class DeleteOrderRoute implements Route {
     private constructor(
         private readonly path: string,
         private readonly method: HttpMethod,
-        private readonly updatePasswordUsecase: UpdatePasswordUsecase
+        private readonly deleteOrderUsecase: DeleteOrderUsecase
     ) {}
 
-    public static build(updatePasswordUsecase: UpdatePasswordUsecase) {
-        return new UpdatePasswordRoute(
-            "/users/update-password/:id",
-            HttpMethod.PUT,
-            updatePasswordUsecase
+    public static build(deleteOrderUsecase: DeleteOrderUsecase) {
+        return new DeleteOrderRoute(
+            "/orders/:id",
+            HttpMethod.DELETE,
+            deleteOrderUsecase
         );
     }
 
     public getHandler(): (req: Request, res: Response) => Promise<any> {
         return async (req: Request, res: Response) => {
             const { id } = req.params;
-            const body = req.body;
 
-            const input = updatePasswordSchema.parse({ id, ...body });
-            await this.updatePasswordUsecase.execute(input);
+            const input = findOrderSchema.parse({ id });
+            await this.deleteOrderUsecase.execute(input);
 
             return res.status(204).send();
         };
@@ -45,6 +44,6 @@ export class UpdatePasswordRoute implements Route {
         res: Response,
         next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(updatePasswordSchema)];
+        return [Logger(), ValidateSchema(findOrderSchema)];
     }
 }

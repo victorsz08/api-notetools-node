@@ -16,6 +16,10 @@ export class UpdateUserUsecase
 {
     public constructor(private readonly userInterface: UserInterface) {}
 
+    public static build(userInterface: UserInterface) {
+        return new UpdateUserUsecase(userInterface);
+    }
+
     public async execute(input: UpdateUserInputDto): Promise<void> {
         const { id, username, firstName, lastName } = input;
         const updatedAt = GenerateDate.now();
@@ -25,7 +29,7 @@ export class UpdateUserUsecase
             username,
             firstName,
             lastName,
-            updatedAt,
+            updatedAt
         );
 
         return;

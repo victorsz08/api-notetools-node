@@ -1,34 +1,34 @@
 import { Request, Response, NextFunction } from "express";
 import { HttpMethod, Route } from "../route.express";
-import { UpdatePasswordUsecase } from "../../../../../usecases/user/update-password.usecase";
-import { updatePasswordSchema } from "../../../../../validators/user.validator";
+import { CreateOrderUsecase } from "../../../../../usecases/order/create.usecase";
+import { createOrderValidator } from "../../../../../validators/order.validator";
 import { Logger } from "../../../../../middleware/logger";
 import { ValidateSchema } from "../../../../../middleware/validate-schemas";
 
-export class UpdatePasswordRoute implements Route {
+export class CreateOrderRoute implements Route {
     private constructor(
         private readonly path: string,
         private readonly method: HttpMethod,
-        private readonly updatePasswordUsecase: UpdatePasswordUsecase
+        private readonly createOrderUsecase: CreateOrderUsecase
     ) {}
 
-    public static build(updatePasswordUsecase: UpdatePasswordUsecase) {
-        return new UpdatePasswordRoute(
-            "/users/update-password/:id",
-            HttpMethod.PUT,
-            updatePasswordUsecase
+    public static build(createOrderUsecase: CreateOrderUsecase) {
+        return new CreateOrderRoute(
+            "/orders/:userId",
+            HttpMethod.POST,
+            createOrderUsecase
         );
     }
 
     public getHandler(): (req: Request, res: Response) => Promise<any> {
         return async (req: Request, res: Response) => {
-            const { id } = req.params;
             const body = req.body;
+            const { userId } = req.params;
 
-            const input = updatePasswordSchema.parse({ id, ...body });
-            await this.updatePasswordUsecase.execute(input);
+            const input = createOrderValidator.parse({ ...body, userId });
 
-            return res.status(204).send();
+            await this.createOrderUsecase.execute(input);
+            return res.status(201).send();
         };
     }
 
@@ -45,6 +45,6 @@ export class UpdatePasswordRoute implements Route {
         res: Response,
         next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(updatePasswordSchema)];
+        return [Logger(), ValidateSchema(createOrderValidator)];
     }
 }

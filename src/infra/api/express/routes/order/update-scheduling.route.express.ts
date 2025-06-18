@@ -1,22 +1,22 @@
 import { Request, Response, NextFunction } from "express";
 import { HttpMethod, Route } from "../route.express";
-import { UpdatePasswordUsecase } from "../../../../../usecases/user/update-password.usecase";
-import { updatePasswordSchema } from "../../../../../validators/user.validator";
+import { UpdateSchedulingUsecase } from "../../../../../usecases/order/update-scheduling.usecase";
+import { updateSchedulingSchema } from "../../../../../validators/order.validator";
 import { Logger } from "../../../../../middleware/logger";
 import { ValidateSchema } from "../../../../../middleware/validate-schemas";
 
-export class UpdatePasswordRoute implements Route {
+export class UpdateSchedulingRoute implements Route {
     private constructor(
         private readonly path: string,
         private readonly method: HttpMethod,
-        private readonly updatePasswordUsecase: UpdatePasswordUsecase
+        private readonly updateSchedulingUsecase: UpdateSchedulingUsecase
     ) {}
 
-    public static build(updatePasswordUsecase: UpdatePasswordUsecase) {
-        return new UpdatePasswordRoute(
-            "/users/update-password/:id",
+    public static build(updateSchedulingUsecase: UpdateSchedulingUsecase) {
+        return new UpdateSchedulingRoute(
+            "/orders/update-scheduling/:id",
             HttpMethod.PUT,
-            updatePasswordUsecase
+            updateSchedulingUsecase
         );
     }
 
@@ -25,8 +25,8 @@ export class UpdatePasswordRoute implements Route {
             const { id } = req.params;
             const body = req.body;
 
-            const input = updatePasswordSchema.parse({ id, ...body });
-            await this.updatePasswordUsecase.execute(input);
+            const input = updateSchedulingSchema.parse({ id, ...body });
+            await this.updateSchedulingUsecase.execute(input);
 
             return res.status(204).send();
         };
@@ -45,6 +45,6 @@ export class UpdatePasswordRoute implements Route {
         res: Response,
         next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(updatePasswordSchema)];
+        return [Logger(), ValidateSchema(updateSchedulingSchema)];
     }
 }

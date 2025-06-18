@@ -18,21 +18,22 @@ model Contract {
   installationHour String
   products         String[]
   price            Float
-  status           Status       
+  status           Status        @default(PENDENTE)
   userId           String
-  createdAt        DateTime     
+  createdAt        DateTime      @default(now())
   updatedAt        DateTime
+  type             TypeContract?
   user             User          @relation(fields: [userId], references: [id])
 }
 
-
 model Notes {
   id        String   @id
+  title     String?
   text      String
-  user_id   String
-  createdAt DateTime 
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now())
   updatedAt DateTime
-  User      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -40,14 +41,55 @@ model User {
   username     String        @unique
   name         String
   lastname     String
-  role         Role        
+  role         Role
   password     String
-  createdAt    DateTime      
+  createdAt    DateTime
   updatedAt    DateTime
+  team_id      String?
+  accessStatus AccessStatus? @default(ACTIVE)
   Contract     Contract[]
+  Goals        Goals[]
   Notes        Notes[]
+  OwnerTeam    OwnerTeam?
+  Team         Team?         @relation(fields: [team_id], references: [id])
 }
 
+model Countries {
+  id        Int      @id @unique
+  country   String
+  uf        String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model Goals {
+  id        String   @id
+  goal      Float
+  user_id   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  User      User     @relation(fields: [user_id], references: [id])
+}
+
+model OwnerTeam {
+  owner_id  String   @unique
+  team_id   String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  User      User     @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+  Team      Team     @relation(fields: [team_id], references: [id])
+
+  @@id([owner_id, team_id])
+}
+
+model Team {
+  id        String     @id
+  name      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime
+  OwnerTeam OwnerTeam?
+  User      User[]
+}
 
 enum Role {
   USER
@@ -61,3 +103,12 @@ enum Status {
   CONECTADO
 }
 
+enum AccessStatus {
+  ACTIVE
+  REVOGED
+}
+
+enum TypeContract {
+  BASE
+  PROSPECT
+}

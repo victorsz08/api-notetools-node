@@ -25,8 +25,8 @@ class UserMapper {
             firstName: user.firstName,
             lastName: user.lastName,
             role: UserRole[user.role],
-            createdAt: dateGenerate.toString(user.createdAt),
-            updatedAt: dateGenerate.toString(user.updatedAt),
+            createdAt: dateGenerate.format(user.createdAt),
+            updatedAt: dateGenerate.format(user.updatedAt),
         };
     }
 }
