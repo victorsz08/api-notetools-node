@@ -50,6 +50,11 @@ import { GetInsightPerDayUsecase } from "../usecases/insight/get-insight-per-day
 import { GetInsightRoute } from "../infra/api/express/routes/insight/get-insight.route.express";
 import { GetStatusInsightRoute } from "../infra/api/express/routes/insight/get-status-insight.route.express";
 import { GetInsightPerDayRoute } from "../infra/api/express/routes/insight/get-insights-per-day.route.express";
+import { AdminRepositoryPrisma } from "../infra/repositories/admin.repository.prisma";
+import { RecoveryPasswordUsecase } from "../usecases/admin/recovery-password.usecase";
+import { GrantedUserAccessUsecase } from "../usecases/admin/granted-user-access.usecase";
+import { RecoveryPasswordRoute } from "../infra/api/express/routes/admin/recovery-password.route.express";
+import { GrantedUserAccessRoute } from "../infra/api/express/routes/admin/granted-user-access.route.express";
 
 // repositories
 const userRepository = UserRepository.build(prisma);
@@ -57,6 +62,7 @@ const orderRepository = OrderRepository.build(prisma);
 const authRepository = AuthRepository.build(prisma);
 const noteRepository = NoteRepository.build(prisma);
 const insightRepository = InsightRepository.build(prisma);
+const adminRepository = AdminRepositoryPrisma.build(prisma);
 
 // usecases
 
@@ -94,6 +100,11 @@ const getStatusInsightsUsecase =
 const getInsightPerDayUsecase =
     GetInsightPerDayUsecase.build(insightRepository);
 
+// admins
+const recoveryPasswordUsecase = RecoveryPasswordUsecase.build(adminRepository);
+const grantedUserAccessUsecase =
+    GrantedUserAccessUsecase.build(adminRepository);
+
 // routes
 
 // orders
@@ -103,7 +114,7 @@ const listOrderRoute = ListOrderRoute.build(listOrderUsecase);
 const updateOrderRoute = UpdateOrderRoute.build(updateOrderUsecase);
 const updateStatusRoute = UpdateStatusRoute.build(updateStatusUseacse);
 const updateSchedulingRoute = UpdateSchedulingRoute.build(
-    updateSchedulingUsecase,
+    updateSchedulingUsecase
 );
 const deleteOrderRoute = DeleteOrderRoute.build(deleteOrderUsecase);
 
@@ -130,10 +141,18 @@ const deleteNoteRoute = DeleteNoteRoute.build(deleteNoteUsecase);
 // insights
 const getInsightRoute = GetInsightRoute.build(getInsightUsecase);
 const getStatusInsightRoute = GetStatusInsightRoute.build(
-    getStatusInsightsUsecase,
+    getStatusInsightsUsecase
 );
 const getInsightPerDayRoute = GetInsightPerDayRoute.build(
-    getInsightPerDayUsecase,
+    getInsightPerDayUsecase
+);
+
+// admins
+const recoveryPasswordRoute = RecoveryPasswordRoute.build(
+    recoveryPasswordUsecase
+);
+const grantedUserAccessRoute = GrantedUserAccessRoute.build(
+    grantedUserAccessUsecase
 );
 
 export const routes = [
@@ -161,4 +180,6 @@ export const routes = [
     getInsightRoute,
     getStatusInsightRoute,
     getInsightPerDayRoute,
+    recoveryPasswordRoute,
+    grantedUserAccessRoute,
 ];
