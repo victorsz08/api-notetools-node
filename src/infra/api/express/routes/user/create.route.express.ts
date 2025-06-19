@@ -21,7 +21,6 @@ export class CreateUserRoute implements Route {
             createUserUsecase
         );
     }
-
     public getHandler(): (req: Request, res: Response) => Promise<any> {
         return async (req: Request, res: Response) => {
             const body = req.body;

@@ -1,0 +1,255 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "User Management API",
+        "version": "1.0.0",
+        "description": "API for managing users"
+    },
+    "components": {
+        "securitySchemes": {
+            "cookieAuth": {
+                "type": "apiKey",
+                "in": "cookie",
+                "name": "nt.authtoken"
+            }
+        },
+        "schemas": {
+            "User": {
+                "type": "object",
+                "required": [
+                    "username",
+                    "firstName",
+                    "lastName",
+                    "role",
+                    "password"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "ID único do usuário"
+                    },
+                    "username": {
+                        "type": "string",
+                        "description": "Username do usuário"
+                    },
+                    "fisrtName": {
+                        "type": "string",
+                        "format": "string",
+                        "description": "Nome do usuário"
+                    },
+                    "lastName": {
+                        "type": "string",
+                        "format": "string",
+                        "description": "Sobrenome do usuário"
+                    },
+                    "role": {
+                        "type": "string",
+                        "format": "string",
+                        "description": "Senha do usuário"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "description": "Senha do usuário"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Data de criação do usuário"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Data de atualização do usuário"
+                    }
+                }
+            }
+        }
+    },
+    "paths": {
+        "/users": {
+            "post": {
+                "tags": ["Users"],
+                "summary": "Criar novo usuário",
+                "description": "Criação de novo usuário - Requer cargo de administrador",
+                "security": [
+                    {
+                        "cookieAuth": ["nt.authtoken"]
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "description": "Username do usuário"
+                                    },
+                                    "firstName": {
+                                        "type": "string",
+                                        "description": "Nome do usuário"
+                                    },
+                                    "lastName": {
+                                        "type": "string",
+                                        "description": "Sobrenome do usuário"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "description": "Senha do usuário"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuário criado com sucesso"
+                    },
+                    "400": {
+                        "description": "Dados inválidos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "object",
+                                            "properties": {
+                                                "details": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "description": "Detalhes do erro"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or missing token"
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Users"],
+                "summary": "Listar usuários",
+                "description": "Listagem de usuários - Requer cargo de administrador",
+                "security": [
+                    {
+                        "cookieAuth": ["nt.authtoken"]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Número da página para paginação",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Número de usuários por página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Busca os usuários pelo username, firstName e lastName",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista paginada de usuários",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "users": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "format": "uuid",
+                                                        "description": "ID único do usuário"
+                                                    },
+                                                    "username": {
+                                                        "type": "string",
+                                                        "description": "Username do usuário"
+                                                    },
+                                                    "firstName": {
+                                                        "type": "string",
+                                                        "description": "Nome do usuário"
+                                                    },
+                                                    "lastName": {
+                                                        "type": "string",
+                                                        "description": "Sobrenome do usuário"
+                                                    },
+                                                    "role": {
+                                                        "type": "string",
+                                                        "description": "Cargo do usuário"
+                                                    },
+                                                    "createdAt": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "description": "Data de criação do usuário"
+                                                    },
+                                                    "updatedAt": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "description": "Data de atualização do usuário"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "page": {
+                                            "type": "integer",
+                                            "description": "Número da página atual"
+                                        },
+                                        "totalItems": {
+                                            "type": "integer",
+                                            "description": "Total de usuários encontrados"
+                                        },
+                                        "totalPages": {
+                                            "type": "integer",
+                                            "description": "Total de páginas disponíveis"
+                                        },
+                                        "limit": {
+                                            "type": "integer",
+                                            "description": "Quantidade de usuários por página"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or missing token"
+                    }
+                }
+            }
+        }
+    }
+}

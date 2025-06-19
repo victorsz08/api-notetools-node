@@ -5,6 +5,8 @@ import CookieParser from "cookie-parser";
 import { HttpHandlerError } from "../../../middleware/http-handler-error";
 import cors from "cors";
 import { rateLimit } from "express-rate-limit";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocs from "../../../../swagger.json";
 
 export class ApiExpress implements Api {
     private app: Express;
@@ -18,7 +20,7 @@ export class ApiExpress implements Api {
                 credentials: true,
                 allowedHeaders: ["Content-Type", "Authorization"],
                 methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-            }),
+            })
         );
 
         this.app.use(
@@ -27,7 +29,13 @@ export class ApiExpress implements Api {
                 limit: 25,
                 standardHeaders: "draft-8",
                 legacyHeaders: false,
-            }),
+            })
+        );
+
+        this.app.use(
+            "/api-docs",
+            swaggerUi.serve,
+            swaggerUi.setup(swaggerDocs)
         );
 
         this.app.use(express.json());
