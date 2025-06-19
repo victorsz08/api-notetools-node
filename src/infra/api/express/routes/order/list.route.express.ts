@@ -25,8 +25,11 @@ export class ListOrderRoute implements Route {
             const { userId } = req.params;
             const query = req.query;
 
-            const input = listOrderSchema.parse({ ...query, userId });
-            const orders = await this.listOrderUsecase.execute(input);
+            const input = listOrderSchema.parse(query);
+            const orders = await this.listOrderUsecase.execute({
+                ...input,
+                userId,
+            });
 
             return res.status(200).json(orders);
         };
@@ -45,6 +48,6 @@ export class ListOrderRoute implements Route {
         res: Response,
         next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(listOrderSchema)];
+        return [Logger(), ValidateSchema(listOrderSchema, "query")];
     }
 }

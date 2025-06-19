@@ -25,8 +25,8 @@ export class UpdatePasswordRoute implements Route {
             const { id } = req.params;
             const body = req.body;
 
-            const input = updatePasswordSchema.parse({ id, ...body });
-            await this.updatePasswordUsecase.execute(input);
+            const input = updatePasswordSchema.parse(body);
+            await this.updatePasswordUsecase.execute({ ...input, id });
 
             return res.status(204).send();
         };
@@ -45,6 +45,6 @@ export class UpdatePasswordRoute implements Route {
         res: Response,
         next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(updatePasswordSchema)];
+        return [Logger(), ValidateSchema(updatePasswordSchema, "body")];
     }
 }

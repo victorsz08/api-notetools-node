@@ -9,14 +9,14 @@ export class ListNoteRoute implements Route {
     private constructor(
         private readonly path: string,
         private readonly method: HttpMethod,
-        private readonly listNoteUsecase: ListNoteUsecase,
+        private readonly listNoteUsecase: ListNoteUsecase
     ) {}
 
     public static build(listNoteUsecase: ListNoteUsecase) {
         return new ListNoteRoute(
             "/notes/list/:userId",
             HttpMethod.GET,
-            listNoteUsecase,
+            listNoteUsecase
         );
     }
 
@@ -25,8 +25,11 @@ export class ListNoteRoute implements Route {
             const { userId } = req.params;
             const query = req.query;
 
-            const input = listNoteSchema.parse({ userId, ...query });
-            const data = await this.listNoteUsecase.execute(input);
+            const input = listNoteSchema.parse(query);
+            const data = await this.listNoteUsecase.execute({
+                ...input,
+                userId,
+            });
 
             return res.status(200).json(data);
         };
@@ -43,8 +46,8 @@ export class ListNoteRoute implements Route {
     public getMiddlewares(): ((
         req: Request,
         res: Response,
-        next: NextFunction,
+        next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(listNoteSchema)];
+        return [Logger(), ValidateSchema(listNoteSchema, "query")];
     }
 }

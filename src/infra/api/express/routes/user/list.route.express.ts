@@ -11,7 +11,7 @@ export class ListUserRoute implements Route {
     private constructor(
         private readonly path: string,
         private readonly method: HttpMethod,
-        private readonly listUserUsecase: ListUserUsecase,
+        private readonly listUserUsecase: ListUserUsecase
     ) {}
 
     public static build(listUserUsecase: ListUserUsecase) {
@@ -39,8 +39,12 @@ export class ListUserRoute implements Route {
     public getMiddlewares(): ((
         req: Request,
         res: Response,
-        next: NextFunction,
+        next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(listUserSchema), Guard(Role.ADMIN)];
+        return [
+            Logger(),
+            ValidateSchema(listUserSchema, "query"),
+            Guard(Role.ADMIN),
+        ];
     }
 }

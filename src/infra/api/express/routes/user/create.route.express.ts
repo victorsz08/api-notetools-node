@@ -11,14 +11,14 @@ export class CreateUserRoute implements Route {
     private constructor(
         private readonly path: string,
         private readonly method: HttpMethod,
-        private readonly createUserUsecase: CreateUserUsecase,
+        private readonly createUserUsecase: CreateUserUsecase
     ) {}
 
     public static build(createUserUsecase: CreateUserUsecase) {
         return new CreateUserRoute(
             "/users",
             HttpMethod.POST,
-            createUserUsecase,
+            createUserUsecase
         );
     }
 
@@ -44,8 +44,12 @@ export class CreateUserRoute implements Route {
     public getMiddlewares(): ((
         req: Request,
         res: Response,
-        next: NextFunction,
+        next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(createUserSchema), Guard(Role.ADMIN)];
+        return [
+            Logger(),
+            ValidateSchema(createUserSchema, "body"),
+            Guard(Role.ADMIN),
+        ];
     }
 }

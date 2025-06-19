@@ -9,14 +9,14 @@ export class GetInsightRoute implements Route {
     private constructor(
         private readonly path: string,
         private readonly method: HttpMethod,
-        private readonly getInsightUsecase: GetInsightUsecase,
+        private readonly getInsightUsecase: GetInsightUsecase
     ) {}
 
     public static build(getInsightUsecase: GetInsightUsecase) {
         return new GetInsightRoute(
             "/insights/:userId",
             HttpMethod.GET,
-            getInsightUsecase,
+            getInsightUsecase
         );
     }
 
@@ -25,8 +25,11 @@ export class GetInsightRoute implements Route {
             const { userId } = req.params;
             const body = req.body;
 
-            const input = getInsightSchema.parse({ userId, ...body });
-            const data = await this.getInsightUsecase.execute(input);
+            const input = getInsightSchema.parse(body);
+            const data = await this.getInsightUsecase.execute({
+                ...input,
+                userId,
+            });
 
             return res.status(200).json(data);
         };
@@ -43,8 +46,8 @@ export class GetInsightRoute implements Route {
     public getMiddlewares(): ((
         req: Request,
         res: Response,
-        next: NextFunction,
+        next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(getInsightSchema)];
+        return [Logger(), ValidateSchema(getInsightSchema, "body")];
     }
 }

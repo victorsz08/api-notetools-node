@@ -11,14 +11,14 @@ export class DeleteUserRoute implements Route {
     private constructor(
         private readonly path: string,
         private readonly method: HttpMethod,
-        private readonly deleteUserUsecase: DeleteUserUsecase,
+        private readonly deleteUserUsecase: DeleteUserUsecase
     ) {}
 
     public static build(deleteUserUsecase: DeleteUserUsecase) {
         return new DeleteUserRoute(
             "/users/:id",
             HttpMethod.DELETE,
-            deleteUserUsecase,
+            deleteUserUsecase
         );
     }
 
@@ -44,8 +44,12 @@ export class DeleteUserRoute implements Route {
     public getMiddlewares(): ((
         req: Request,
         res: Response,
-        next: NextFunction,
+        next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(findUserSchema), Guard(Role.ADMIN)];
+        return [
+            Logger(),
+            ValidateSchema(findUserSchema, "params"),
+            Guard(Role.ADMIN),
+        ];
     }
 }

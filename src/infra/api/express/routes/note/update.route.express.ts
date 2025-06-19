@@ -9,14 +9,14 @@ export class UpdateNoteRoute implements Route {
     private constructor(
         private readonly path: string,
         private readonly method: HttpMethod,
-        private readonly updateNoteUsecase: UpdateNoteUsecase,
+        private readonly updateNoteUsecase: UpdateNoteUsecase
     ) {}
 
     public static build(updateNoteUsecase: UpdateNoteUsecase) {
         return new UpdateNoteRoute(
             "/notes/:id",
             HttpMethod.PUT,
-            updateNoteUsecase,
+            updateNoteUsecase
         );
     }
 
@@ -25,8 +25,8 @@ export class UpdateNoteRoute implements Route {
             const { id } = req.params;
             const body = req.body;
 
-            const input = updateNoteSchema.parse({ id, ...body });
-            await this.updateNoteUsecase.execute(input);
+            const input = updateNoteSchema.parse(body);
+            await this.updateNoteUsecase.execute({ ...input, id });
 
             return res.status(204).send();
         };
@@ -43,8 +43,8 @@ export class UpdateNoteRoute implements Route {
     public getMiddlewares(): ((
         req: Request,
         res: Response,
-        next: NextFunction,
+        next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(updateNoteSchema)];
+        return [Logger(), ValidateSchema(updateNoteSchema, "body")];
     }
 }

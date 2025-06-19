@@ -9,7 +9,7 @@ export class FindNoteRoute implements Route {
     private constructor(
         private readonly path: string,
         private readonly method: HttpMethod,
-        private readonly findNoteUsecase: FindNoteUsecase,
+        private readonly findNoteUsecase: FindNoteUsecase
     ) {}
 
     public static build(findNoteUsecase: FindNoteUsecase) {
@@ -37,8 +37,8 @@ export class FindNoteRoute implements Route {
     public getMiddlewares(): ((
         req: Request,
         res: Response,
-        next: NextFunction,
+        next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(findNoeSchema)];
+        return [Logger(), ValidateSchema(findNoeSchema, "params")];
     }
 }

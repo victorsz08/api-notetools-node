@@ -25,8 +25,8 @@ export class UpdateSchedulingRoute implements Route {
             const { id } = req.params;
             const body = req.body;
 
-            const input = updateSchedulingSchema.parse({ id, ...body });
-            await this.updateSchedulingUsecase.execute(input);
+            const input = updateSchedulingSchema.parse(body);
+            await this.updateSchedulingUsecase.execute({ ...input, id });
 
             return res.status(204).send();
         };
@@ -45,6 +45,6 @@ export class UpdateSchedulingRoute implements Route {
         res: Response,
         next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(updateSchedulingSchema)];
+        return [Logger(), ValidateSchema(updateSchedulingSchema, "body")];
     }
 }

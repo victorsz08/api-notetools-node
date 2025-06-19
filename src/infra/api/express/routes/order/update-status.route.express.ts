@@ -25,8 +25,8 @@ export class UpdateStatusRoute implements Route {
             const { id } = req.params;
             const body = req.body;
 
-            const input = updateStatusSchema.parse({ id, body });
-            await this.updateStatusUsecase.execute(input);
+            const input = updateStatusSchema.parse(body);
+            await this.updateStatusUsecase.execute({ ...input, id });
 
             return res.status(204).send();
         };
@@ -45,6 +45,6 @@ export class UpdateStatusRoute implements Route {
         res: Response,
         next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(updateStatusSchema)];
+        return [Logger(), ValidateSchema(updateStatusSchema, "body")];
     }
 }

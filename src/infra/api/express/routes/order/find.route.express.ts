@@ -44,6 +44,6 @@ export class FindOrderRoute implements Route {
         res: Response,
         next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(findOrderSchema)];
+        return [Logger(), ValidateSchema(findOrderSchema, "params")];
     }
 }

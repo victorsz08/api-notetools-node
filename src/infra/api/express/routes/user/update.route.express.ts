@@ -25,8 +25,8 @@ export class UpdateUserRoute implements Route {
             const { id } = req.params;
             const body = req.body;
 
-            const input = updateUserSchema.parse({ id, ...body });
-            await this.updateUserUsecase.execute(input);
+            const input = updateUserSchema.parse(body);
+            await this.updateUserUsecase.execute({ ...input, id });
 
             return res.status(204).send();
         };
@@ -45,6 +45,6 @@ export class UpdateUserRoute implements Route {
         res: Response,
         next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(updateUserSchema)];
+        return [Logger(), ValidateSchema(updateUserSchema, "body")];
     }
 }

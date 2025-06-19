@@ -32,10 +32,6 @@ export const createOrderValidator = z.object({
         .number()
         .min(0.01, { message: "O preço deve ser maior que 0" })
         .max(1000000000, { message: "O preço deve ser menor que 1000000000" }),
-    userId: z
-        .string()
-        .min(1, { message: "O usuário deve ser informado" })
-        .nonempty({ message: "O usuário deve ser informado" }),
 });
 
 export const findOrderSchema = z.object({
@@ -46,10 +42,6 @@ export const findOrderSchema = z.object({
 });
 
 export const updateOrderSchema = z.object({
-    id: z
-        .string()
-        .min(1, { message: "O id deve ser informado" })
-        .nonempty({ message: "O id deve ser informado" }),
     number: z.coerce
         .number()
         .min(1, { message: "O número do contrato deve ser maior que 0" })
@@ -71,18 +63,10 @@ export const updateOrderSchema = z.object({
 });
 
 export const updateStatusSchema = z.object({
-    id: z
-        .string()
-        .min(1, { message: "O id deve ser informado" })
-        .nonempty({ message: "O id deve ser informado" }),
     status: z.enum(["PENDENTE", "CONECTADO", "PENDENTE"]),
 });
 
 export const updateSchedulingSchema = z.object({
-    id: z
-        .string()
-        .min(1, { message: "O id deve ser informado" })
-        .nonempty({ message: "O id deve ser informado" }),
     schedulingDate: z.coerce.date().min(dateGenerate.now(), {
         message: "A data de agendamento deve ser maior que a data atual",
     }),
@@ -103,9 +87,6 @@ export const listOrderSchema = z.object({
     limit: z.coerce
         .number()
         .min(1, { message: "O limite deve ser maior que 0" }),
-    userId: z
-        .string()
-        .nonempty({ message: "O id do usuário deve ser informado" }),
     status: z.enum(["PENDENTE", "CONECTADO", "PENDENTE"]).optional(),
     schedulingDateIn: z.coerce
         .date()

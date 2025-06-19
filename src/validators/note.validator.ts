@@ -6,7 +6,6 @@ export const createNoteSchema = z.object({
         .nonempty("o campo titulo é obrigatório")
         .max(32, "o campo titulo não pode conter mais que 32 caracteres"),
     content: z.string().nonempty("digite algo no campo conteúdo"),
-    userId: z.string().nonempty("o parametro user id é obrigatório"),
 });
 
 export const findNoeSchema = z.object({
@@ -14,7 +13,6 @@ export const findNoeSchema = z.object({
 });
 
 export const listNoteSchema = z.object({
-    userId: z.string().nonempty("o parametro user id é obrigatório"),
     page: z.coerce
         .number()
         .min(1, "o parametro pagina deve ser maior que 0")
@@ -26,7 +24,6 @@ export const listNoteSchema = z.object({
 });
 
 export const updateNoteSchema = z.object({
-    id: z.string().nonempty("o parametro id é obrigatório"),
     title: z
         .string()
         .nonempty("o campo titulo é obrigatório")

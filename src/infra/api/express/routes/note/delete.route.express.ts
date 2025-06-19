@@ -9,14 +9,14 @@ export class DeleteNoteRoute implements Route {
     private constructor(
         private readonly path: string,
         private readonly method: HttpMethod,
-        private readonly deleteNoteUsecase: DeleteNoteUsecase,
+        private readonly deleteNoteUsecase: DeleteNoteUsecase
     ) {}
 
     public static build(deleteNoteUsecase: DeleteNoteUsecase) {
         return new DeleteNoteRoute(
             "/notes/:id",
             HttpMethod.DELETE,
-            deleteNoteUsecase,
+            deleteNoteUsecase
         );
     }
 
@@ -41,8 +41,8 @@ export class DeleteNoteRoute implements Route {
     public getMiddlewares(): ((
         req: Request,
         res: Response,
-        next: NextFunction,
+        next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(findNoeSchema)];
+        return [Logger(), ValidateSchema(findNoeSchema, "params")];
     }
 }

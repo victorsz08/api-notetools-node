@@ -9,14 +9,14 @@ export class GetInsightPerDayRoute implements Route {
     private constructor(
         private readonly path: string,
         private readonly method: HttpMethod,
-        private readonly getInsightPerDayUsecase: GetInsightPerDayUsecase,
+        private readonly getInsightPerDayUsecase: GetInsightPerDayUsecase
     ) {}
 
     public static build(getInsightPerDayUsecase: GetInsightPerDayUsecase) {
         return new GetInsightPerDayRoute(
             "/insights/per-day/:userId",
             HttpMethod.GET,
-            getInsightPerDayUsecase,
+            getInsightPerDayUsecase
         );
     }
 
@@ -25,8 +25,11 @@ export class GetInsightPerDayRoute implements Route {
             const { userId } = req.params;
             const body = req.body;
 
-            const input = getInsightSchema.parse({ userId, ...body });
-            const data = await this.getInsightPerDayUsecase.execute(input);
+            const input = getInsightSchema.parse(body);
+            const data = await this.getInsightPerDayUsecase.execute({
+                ...input,
+                userId,
+            });
 
             return res.status(200).json(data);
         };
@@ -43,8 +46,8 @@ export class GetInsightPerDayRoute implements Route {
     public getMiddlewares(): ((
         req: Request,
         res: Response,
-        next: NextFunction,
+        next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(getInsightSchema)];
+        return [Logger(), ValidateSchema(getInsightSchema, "body")];
     }
 }

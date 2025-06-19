@@ -25,9 +25,9 @@ export class CreateOrderRoute implements Route {
             const body = req.body;
             const { userId } = req.params;
 
-            const input = createOrderValidator.parse({ ...body, userId });
+            const input = createOrderValidator.parse(body);
 
-            await this.createOrderUsecase.execute(input);
+            await this.createOrderUsecase.execute({ ...input, userId });
             return res.status(201).send();
         };
     }
@@ -45,6 +45,6 @@ export class CreateOrderRoute implements Route {
         res: Response,
         next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(createOrderValidator)];
+        return [Logger(), ValidateSchema(createOrderValidator, "body")];
     }
 }

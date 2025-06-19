@@ -15,6 +15,7 @@ export function ValidateSchema(
             const validateToData = req[source];
             schema.parse(validateToData);
 
+            console.log(validateToData);
             next();
         } catch (error) {
             if (error instanceof ZodError) {

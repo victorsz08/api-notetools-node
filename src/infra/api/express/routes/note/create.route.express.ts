@@ -9,14 +9,14 @@ export class CreateNoteRoute implements Route {
     private constructor(
         private readonly path: string,
         private readonly method: HttpMethod,
-        private readonly createNoteUsecase: CreateNoteUsecase,
+        private readonly createNoteUsecase: CreateNoteUsecase
     ) {}
 
     public static build(createNoteUsecase: CreateNoteUsecase) {
         return new CreateNoteRoute(
             "/notes/:userId",
             HttpMethod.POST,
-            createNoteUsecase,
+            createNoteUsecase
         );
     }
 
@@ -25,8 +25,11 @@ export class CreateNoteRoute implements Route {
             const { userId } = req.params;
             const body = req.body;
 
-            const input = createNoteSchema.parse({ userId, ...body });
-            const note = await this.createNoteUsecase.execute(input);
+            const input = createNoteSchema.parse(body);
+            const note = await this.createNoteUsecase.execute({
+                ...input,
+                userId,
+            });
 
             return res.status(201).json(note);
         };
@@ -43,8 +46,8 @@ export class CreateNoteRoute implements Route {
     public getMiddlewares(): ((
         req: Request,
         res: Response,
-        next: NextFunction,
+        next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(createNoteSchema)];
+        return [Logger(), ValidateSchema(createNoteSchema, "body")];
     }
 }

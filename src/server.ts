@@ -4,7 +4,7 @@ import { routes } from "./module/main.module";
 function main() {
     const api = ApiExpress.build(routes);
 
-    api.start(8000);
+    api.start(8001);
 }
 
 main();

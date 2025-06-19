@@ -25,8 +25,8 @@ export class UpdateOrderRoute implements Route {
             const { id } = req.params;
             const body = req.body;
 
-            const input = updateOrderSchema.parse({ id, ...body });
-            await this.updateOrderUsecase.execute(input);
+            const input = updateOrderSchema.parse(body);
+            await this.updateOrderUsecase.execute({ ...input, id });
 
             return res.status(204).send();
         };
@@ -45,6 +45,6 @@ export class UpdateOrderRoute implements Route {
         res: Response,
         next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(updateOrderSchema)];
+        return [Logger(), ValidateSchema(updateOrderSchema, "body")];
     }
 }
