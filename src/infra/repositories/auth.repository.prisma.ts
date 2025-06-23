@@ -40,6 +40,9 @@ export class AuthRepository implements AuthInterface {
         const payload = sign(
             {
                 id: user.id,
+                username: user.username,
+                firstName: user.name,
+                lastName: user.lastname,
                 role: user.role,
             },
             config.secret,

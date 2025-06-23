@@ -23,9 +23,9 @@ export class GetInsightRoute implements Route {
     public getHandler(): (req: Request, res: Response) => Promise<any> {
         return async (req: Request, res: Response) => {
             const { userId } = req.params;
-            const body = req.body;
+            const query = req.query;
 
-            const input = getInsightSchema.parse(body);
+            const input = getInsightSchema.parse(query);
             const data = await this.getInsightUsecase.execute({
                 ...input,
                 userId,
@@ -48,6 +48,6 @@ export class GetInsightRoute implements Route {
         res: Response,
         next: NextFunction
     ) => Promise<any>)[] {
-        return [Logger(), ValidateSchema(getInsightSchema, "body")];
+        return [Logger(), ValidateSchema(getInsightSchema, "query")];
     }
 }

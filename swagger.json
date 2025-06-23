@@ -125,6 +125,41 @@
                         }
                     }
                 }
+            },
+            "Note": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "title",
+                    "content",
+                    "createdAt",
+                    "updatedAt"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "ID único da nota"
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "Título da nota"
+                    },
+                    "content": {
+                        "type": "string",
+                        "description": "Conteúdo da nota"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Data de criação da nota"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Data de atualização da nota"
+                    }
+                }
             }
         }
     },
@@ -768,6 +803,920 @@
                     },
                     "404": {
                         "description": "Pedido não encontrado"
+                    }
+                }
+            }
+        },
+        "/orders/list/{userId}": {
+            "get": {
+                "tags": ["Pedidos"],
+                "summary": "Listar pedidos do usuário",
+                "description": "Listar todos os pedidos de um usuário específico",
+                "security": [
+                    {
+                        "cookieAuth": ["nt.authtoken"]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "params",
+                        "required": true
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Número da página para paginação",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Número de pedidos por página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    },
+                    {
+                        "name": "schedulingDateIn",
+                        "in": "query",
+                        "description": "Data de agendamento inicial para filtro",
+                        "required": false
+                    },
+                    {
+                        "name": "schedulingDateOut",
+                        "in": "query",
+                        "description": "Data de agendamento final para filtro",
+                        "required": false
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Status do pedido para filtro",
+                        "required": false
+                    },
+                    {
+                        "name": "createdDateIn",
+                        "in": "query",
+                        "description": "Data de criação inicial para filtro",
+                        "required": false
+                    },
+                    {
+                        "name": "createdDateOut",
+                        "in": "query",
+                        "description": "Data de criação final para filtro",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista paginada de pedidos do usuário",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "orders": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Order"
+                                            }
+                                        },
+                                        "page": {
+                                            "type": "integer",
+                                            "description": "Número da página atual"
+                                        },
+                                        "totalItems": {
+                                            "type": "integer",
+                                            "description": "Total de pedidos encontrados"
+                                        },
+                                        "totalPages": {
+                                            "type": "integer",
+                                            "description": "Total de páginas disponíveis"
+                                        },
+                                        "limit": {
+                                            "type": "integer",
+                                            "description": "Quantidade de pedidos por página"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or missing token"
+                    },
+                    "404": {
+                        "description": "Usuário não localizado"
+                    }
+                }
+            }
+        },
+        "/orders/status/{id}": {
+            "put": {
+                "tags": ["Pedidos"],
+                "summary": "Atualizar status do pedido",
+                "description": "Atualizar o status de um pedido específico",
+                "security": [
+                    {
+                        "cookieAuth": ["nt.authtoken"]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "params",
+                        "description": "Id do pedido",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "PENDENTE",
+                                            "CONECTADO",
+                                            "CANCELADO"
+                                        ],
+                                        "description": "Novo status do pedido"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Status atualizado com sucesso"
+                    },
+                    "400": {
+                        "description": "Dados inválidos",
+                        "content": {
+                            "application/json": {
+                                "$ref": "#/components/schemas/Error"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Pedido não encontrado"
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token não localizado"
+                    }
+                }
+            }
+        },
+        "/order/scheduling/{id}": {
+            "put": {
+                "tags": ["Pedidos"],
+                "summary": "Atualizar agendamento do pedido",
+                "description": "Atualizar a data e hora de agendamento de um pedido específico",
+                "security": [
+                    {
+                        "cookieAuth": ["nt.authtoken"]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "params",
+                        "description": "Id do pedido",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "schedulingDate": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "schedulingTime": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Agendamento atualizado com sucesso"
+                    },
+                    "400": {
+                        "description": "Dados inválidos",
+                        "content": {
+                            "application/json": {
+                                "$ref": "#/components/schemas/Error"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Pedido não encontrado"
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token não localizado"
+                    }
+                }
+            }
+        },
+        "/notes/{userId}": {
+            "post": {
+                "tags": ["Notas"],
+                "summary": "Criar nota",
+                "description": "Criação de uma nova nota para o usuário",
+                "security": [
+                    {
+                        "cookieAuth": ["nt.authtoken"]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "params",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "description": "Título da nota"
+                                    },
+                                    "content": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Nota criada com sucesso"
+                    },
+                    "400": {
+                        "description": "Dados inválidos",
+                        "content": {
+                            "application/json": {
+                                "$ref": "#/components/schemas/Error"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não localizado"
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token não localizado"
+                    }
+                }
+            }
+        },
+        "/notes/list/{userId}": {
+            "get": {
+                "tags": ["Notas"],
+                "summary": "Listar notas do usuário",
+                "description": "Listar todas as notas de um usuário específico",
+                "security": [
+                    {
+                        "cookieAuth": ["nt.authtoken"]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "params",
+                        "required": true
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Número da página para paginação",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Número de notas por página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista paginada de notas do usuário",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "notes": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Note"
+                                            }
+                                        },
+                                        "page": {
+                                            "type": "integer",
+                                            "description": "Número da página atual"
+                                        },
+                                        "totalItems": {
+                                            "type": "integer",
+                                            "description": "Total de notas encontradas"
+                                        },
+                                        "totalPages": {
+                                            "type": "integer",
+                                            "description": "Total de páginas disponíveis"
+                                        },
+                                        "limit": {
+                                            "type": "integer",
+                                            "description": "Quantidade de notas por página"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or missing token"
+                    },
+                    "404": {
+                        "description": "Usuário não localizado"
+                    }
+                }
+            }
+        },
+        "/notes/{id}": {
+            "get": {
+                "tags": ["Notas"],
+                "summary": "Obter uma nota por ID",
+                "description": "Obter uma nota específica por seu ID",
+                "security": [
+                    {
+                        "cookieAuth": ["nt.authtoken"]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "params",
+                        "description": "Id único da nota",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Nota encontrada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Note"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Nota não localizada"
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token não localizado"
+                    }
+                }
+            },
+            "put": {
+                "tags": ["Notas"],
+                "summary": "Atualizar nota",
+                "description": "Atualizar os dados de uma nota específica",
+                "security": [
+                    {
+                        "cookieAuth": ["nt.authtoken"]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "params",
+                        "description": "Id único da nota",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "description": "Título da nota"
+                                    },
+                                    "content": {
+                                        "type": "string",
+                                        "description": "Conteúdo da nota"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Nota atualizada com sucesso"
+                    },
+                    "400": {
+                        "description": "Dados inválidos",
+                        "content": {
+                            "application/json": {
+                                "$ref": "#/components/schemas/Error"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Nota não localizada"
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token não localizado"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Notas"],
+                "summary": "Excluir nota",
+                "description": "Excluir uma nota específica",
+                "security": [
+                    {
+                        "cookieAuth": ["nt.authtoken"]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "params",
+                        "description": "Id único da nota",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Nota excluída com sucesso"
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token não localizado"
+                    },
+                    "404": {
+                        "description": "Nota não localizada"
+                    }
+                }
+            }
+        },
+        "/admin/granted-user-accesss/{id}": {
+            "put": {
+                "tags": ["Admin"],
+                "summary": "Conceder acesso de usuário",
+                "description": "Concede acesso a um usuário específico",
+                "security": [
+                    {
+                        "cookieAuth": ["nt.authtoken"]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "params",
+                        "description": "Id único do usuário",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "role": {
+                                        "type": "string",
+                                        "description": "Indica se o acesso foi concedido"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Acesso concedido com sucesso"
+                    },
+                    "400": {
+                        "description": "Dados inválidos",
+                        "content": {
+                            "application/json": {
+                                "$ref": "#/components/schemas/Error"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não localizado"
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token não localizado"
+                    },
+                    "403": {
+                        "description": "Usuário sem permissão para acessar essa rota"
+                    }
+                }
+            }
+        },
+        "/admin/recovery-access/{id}": {
+            "put": {
+                "tags": ["Admin"],
+                "summary": "Recuperar acesso de usuário",
+                "description": "Recupera o acesso de um usuário específico",
+                "security": [
+                    {
+                        "cookieAuth": ["nt.authtoken"]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "params",
+                        "description": "Id único do usuário",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Acesso recuperado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "newPassword": {
+                                            "type": "string",
+                                            "description": "Nova senha gerada para o usuário"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos",
+                        "content": {
+                            "application/json": {
+                                "$ref": "#/components/schemas/Error"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não localizado"
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token não localizado"
+                    },
+                    "403": {
+                        "description": "Usuário sem permissão para acessar essa rota"
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "tags": ["Autenticação"],
+                "summary": "Login de usuário",
+                "description": "Realiza o login de um usuário e retorna um token de autenticação",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["username", "password"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Login realizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "description": "Token de autenticação do usuário"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Credenciais inválidas"
+                    },
+                    "400": {
+                        "description": "Dados inválidos"
+                    }
+                }
+            }
+        },
+        "/auth/session": {
+            "get": {
+                "tags": ["Autenticação"],
+                "summary": "Verificar sessão",
+                "description": "Verifica se o usuário está autenticado e retorna informações da sessão",
+                "security": [
+                    {
+                        "cookieAuth": ["nt.authtoken"]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sessão válida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "ID do usuário autenticado"
+                                        },
+                                        "role": {
+                                            "type": "string",
+                                            "description": "Papel do usuário (ADMIN, USER, etc.)"
+                                        },
+                                        "iat": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "description": "Data e hora da última autenticação"
+                                        },
+                                        "exp": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "description": "Data e hora de expiração do token"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token não localizado"
+                    }
+                }
+            }
+        },
+        "/insights/{userId}": {
+            "get": {
+                "tags": ["Insights"],
+                "summary": "Obter insights do usuário",
+                "description": "Obtém insights sobre o usuário, como pedidos pendentes, notas e status de acesso",
+                "security": [
+                    {
+                        "cookieAuth": ["nt.authtoken"]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "params",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "dateIn": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "description": "Data inicial para filtrar os insights"
+                                    },
+                                    "dateOut": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "description": "Data final para filtrar os insights"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Insights obtidos com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "revenue": {
+                                            "type": "number",
+                                            "description": "Receita total do usuário"
+                                        },
+                                        "sales": {
+                                            "type": "number",
+                                            "description": "Quantidade total de pedidos do usuário"
+                                        },
+                                        "completionRate": {
+                                            "type": "number",
+                                            "description": "Taxa de conclusão de pedidos do usuário"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token não localizado"
+                    },
+                    "404": {
+                        "description": "Usuário não localizado"
+                    }
+                }
+            }
+        },
+        "/insights/status/{userId}": {
+            "get": {
+                "tags": ["Insights"],
+                "summary": "Obter status de pedidos do usuário",
+                "description": "Obtém o status dos pedidos de um usuário específico",
+                "security": [
+                    {
+                        "cookieAuth": ["nt.authtoken"]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "params",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "dateIn": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "description": "Data inicial para filtrar os insights"
+                                    },
+                                    "dateOut": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "description": "Data final para filtrar os insights"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Status dos pedidos obtidos com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "pending": {
+                                            "type": "integer",
+                                            "description": "Número de pedidos pendentes"
+                                        },
+                                        "connected": {
+                                            "type": "integer",
+                                            "description": "Número de pedidos conectados"
+                                        },
+                                        "cancelled": {
+                                            "type": "integer",
+                                            "description": "Número de pedidos cancelados"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token não localizado"
+                    },
+                    "404": {
+                        "description": "Usuário não localizado"
+                    }
+                }
+            }
+        },
+        "/insights/per-day/{userId}": {
+            "get": {
+                "tags": ["Insights"],
+                "summary": "Obter pedidos por dia do usuário",
+                "description": "Obtém a quantidade de pedidos feitos por dia de um usuário específico",
+                "security": [
+                    {
+                        "cookieAuth": ["nt.authtoken"]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "params",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "dateIn": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "description": "Data inicial para filtrar os pedidos"
+                                    },
+                                    "dateOut": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "description": "Data final para filtrar os pedidos"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Pedidos por dia obtidos com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "sales": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "day": {
+                                                        "type": "string",
+                                                        "format": "date"
+                                                    },
+                                                    "quantity": {
+                                                        "type": "integer"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token não localizado"
+                    },
+                    "404": {
+                        "description": "Usuário não localizado"
                     }
                 }
             }

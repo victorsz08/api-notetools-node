@@ -15,7 +15,6 @@ export function ValidateSchema(
             const validateToData = req[source];
             schema.parse(validateToData);
 
-            console.log(validateToData);
             next();
         } catch (error) {
             if (error instanceof ZodError) {
@@ -24,7 +23,7 @@ export function ValidateSchema(
                     message: `${issue.message}`,
                 }));
 
-                return res.status(StatusCode.BAD_REQUEST).json({
+                return res.status(403).json({
                     error: "campos preenchidos incorretamente",
                     details: errorMessages,
                 });
