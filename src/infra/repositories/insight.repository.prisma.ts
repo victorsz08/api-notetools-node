@@ -18,7 +18,7 @@ export class InsightRepository implements InsightInterface {
     public async getInsight(
         userId: string,
         dateIn: Date,
-        dateOut: Date,
+        dateOut: Date
     ): Promise<GetInsightDto> {
         const [sales, connected, cancelled] =
             await this.repository.$transaction([
@@ -73,7 +73,7 @@ export class InsightRepository implements InsightInterface {
     public async getStatusInsight(
         userId: string,
         dateIn: Date,
-        dateOut: Date,
+        dateOut: Date
     ): Promise<GetStatusInsightDto> {
         const [connected, cancelled, pending] =
             await this.repository.$transaction([
@@ -119,13 +119,9 @@ export class InsightRepository implements InsightInterface {
     public async getInsightPerDay(
         userId: string,
         dateIn: Date,
-        dateOut: Date,
+        dateOut: Date
     ): Promise<GetInsightPerDayDto> {
-        const dailySales = await this.repository.contract.groupBy({
-            by: ["createdAt"],
-            _count: {
-                _all: true,
-            },
+        const allSales = await this.repository.contract.findMany({
             where: {
                 user: { id: userId },
                 createdAt: {
@@ -133,15 +129,29 @@ export class InsightRepository implements InsightInterface {
                     lte: dateOut,
                 },
             },
+            select: {
+                createdAt: true,
+            },
             orderBy: {
                 createdAt: "asc",
             },
         });
 
-        const sales = dailySales.map((item) => ({
-            day: moment(item.createdAt).startOf("day").toDate(),
-            quantity: item._count._all,
-        }));
+        const salesMap = new Map<number, number>();
+
+        allSales.forEach((sale) => {
+            const dayTimestamp = moment(sale.createdAt)
+                .startOf("day")
+                .valueOf();
+            salesMap.set(dayTimestamp, (salesMap.get(dayTimestamp) || 0) + 1);
+        });
+
+        const sales = Array.from(salesMap.entries())
+            .map(([dayTimestamp, quantity]) => ({
+                day: new Date(dayTimestamp),
+                quantity: quantity,
+            }))
+            .sort((a, b) => a.day.getTime() - b.day.getTime()); // Sort by day
 
         return {
             sales,

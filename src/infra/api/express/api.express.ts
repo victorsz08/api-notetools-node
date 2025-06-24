@@ -20,22 +20,22 @@ export class ApiExpress implements Api {
                 credentials: true,
                 allowedHeaders: ["Content-Type", "Authorization"],
                 methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-            }),
+            })
         );
 
-        this.app.use(
-            rateLimit({
-                windowMs: 15 * 60 * 1000, // 15min,
-                limit: 40,
-                standardHeaders: "draft-8",
-                legacyHeaders: false,
-            }),
-        );
+        // this.app.use(
+        //     rateLimit({
+        //         windowMs: 5 * 60 * 1000, // 5min,
+        //         limit: 80,
+        //         standardHeaders: "draft-8",
+        //         legacyHeaders: false,
+        //     })
+        // );
 
         this.app.use(
             "/api-docs",
             swaggerUi.serve,
-            swaggerUi.setup(swaggerDocs),
+            swaggerUi.setup(swaggerDocs)
         );
 
         this.app.use(express.json());
