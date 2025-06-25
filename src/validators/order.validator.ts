@@ -5,12 +5,10 @@ import { Status } from "../domain/enum/status.enum";
 export const createOrderValidator = z.object({
     number: z.coerce
         .number()
-        .min(1, { message: "O número do contrato deve ser maior que 0" })
-        .max(32, { message: "O número do contrato deve ser menor que 32" }),
+        .min(1, { message: "O número do contrato deve ser maior que 0" }),
     local: z
         .string()
         .min(1, { message: "O local deve ser informado" })
-        .max(255, { message: "O local deve ter no máximo 255 caracteres" })
         .nonempty({ message: "O local deve ser informado" }),
     schedulingDate: z.coerce.date().min(dateGenerate.now(), {
         message: "A data de agendamento deve ser maior que a data atual",
@@ -18,20 +16,14 @@ export const createOrderValidator = z.object({
     schedulingTime: z
         .string()
         .min(1, { message: "O horário de agendamento deve ser informado" })
-        .max(32, {
-            message:
-                "O horário de agendamento deve ter no máximo 32 caracteres",
-        })
         .nonempty({ message: "O horário de agendamento deve ser informado" }),
     contact: z
         .string()
         .min(1, { message: "O contato deve ser informado" })
-        .max(11, { message: "O contato deve ter no máximo 255 caracteres" })
         .nonempty({ message: "O contato deve ser informado" }),
     price: z.coerce
         .number()
-        .min(0.01, { message: "O preço deve ser maior que 0" })
-        .max(1000000000, { message: "O preço deve ser menor que 1000000000" }),
+        .min(0.01, { message: "O preço deve ser maior que 0" }),
 });
 
 export const findOrderSchema = z.object({
@@ -44,21 +36,17 @@ export const findOrderSchema = z.object({
 export const updateOrderSchema = z.object({
     number: z.coerce
         .number()
-        .min(1, { message: "O número do contrato deve ser maior que 0" })
-        .max(32, { message: "O número do contrato deve ser menor que 32" }),
+        .min(1, { message: "O número do contrato deve ser maior que 0" }),
     local: z
         .string()
         .min(1, { message: "O local deve ser informado" })
-        .max(255, { message: "O local deve ter no máximo 255 caracteres" })
         .nonempty({ message: "O local deve ser informado" }),
     price: z.coerce
         .number()
-        .min(0.01, { message: "O preço deve ser maior que 0" })
-        .max(1000000000, { message: "O preço deve ser menor que 1000000000" }),
+        .min(0.01, { message: "O preço deve ser maior que 0" }),
     contact: z
         .string()
         .min(1, { message: "O contato deve ser informado" })
-        .max(11, { message: "O contato deve ter no máximo 255 caracteres" })
         .nonempty({ message: "O contato deve ser informado" }),
 });
 
@@ -88,28 +76,8 @@ export const listOrderSchema = z.object({
         .number()
         .min(1, { message: "O limite deve ser maior que 0" }),
     status: z.enum(["PENDENTE", "CONECTADO", "PENDENTE"]).optional(),
-    schedulingDateIn: z.coerce
-        .date()
-        .optional()
-        .transform((date) => {
-            return dateGenerate.transform(date);
-        }),
-    schedulingDateOut: z.coerce
-        .date()
-        .optional()
-        .transform((date) => {
-            return dateGenerate.addDays(date, 1);
-        }),
-    createdDateIn: z.coerce
-        .date()
-        .optional()
-        .transform((date) => {
-            return dateGenerate.transform(date);
-        }),
-    createdDateOut: z.coerce
-        .date()
-        .optional()
-        .transform((date) => {
-            return dateGenerate.addDays(date, 1);
-        }),
+    schedulingDateIn: z.coerce.date().optional(),
+    schedulingDateOut: z.coerce.date().optional(),
+    createdDateIn: z.coerce.date().optional(),
+    createdDateOut: z.coerce.date().optional(),
 });

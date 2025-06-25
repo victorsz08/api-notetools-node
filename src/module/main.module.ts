@@ -55,6 +55,7 @@ import { RecoveryPasswordUsecase } from "../usecases/admin/recovery-password.use
 import { GrantedUserAccessUsecase } from "../usecases/admin/granted-user-access.usecase";
 import { RecoveryPasswordRoute } from "../infra/api/express/routes/admin/recovery-password.route.express";
 import { GrantedUserAccessRoute } from "../infra/api/express/routes/admin/granted-user-access.route.express";
+import { GetCitiesRoute } from "../infra/api/express/routes/cities/get-cities.route.express";
 
 // repositories
 const userRepository = UserRepository.build(prisma);
@@ -155,6 +156,9 @@ const grantedUserAccessRoute = GrantedUserAccessRoute.build(
     grantedUserAccessUsecase
 );
 
+// cities
+const getCitiesRoute = GetCitiesRoute.build();
+
 export const routes = [
     createOrderRoute,
     findOrderRoute,
@@ -182,4 +186,5 @@ export const routes = [
     getInsightPerDayRoute,
     recoveryPasswordRoute,
     grantedUserAccessRoute,
+    getCitiesRoute,
 ];

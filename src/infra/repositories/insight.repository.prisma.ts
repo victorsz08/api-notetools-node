@@ -25,7 +25,7 @@ export class InsightRepository implements InsightInterface {
                 this.repository.contract.count({
                     where: {
                         user: { id: userId },
-                        createdAt: {
+                        installationDate: {
                             gte: dateIn,
                             lte: dateOut,
                         },

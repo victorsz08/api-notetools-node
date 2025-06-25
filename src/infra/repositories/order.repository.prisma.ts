@@ -6,6 +6,8 @@ import {
 import { OrderEntity } from "../../domain/entities/order.entity";
 import { HttpException } from "../../package/http-exceptions/http-exception";
 import { StatusCode } from "../../package/http-exceptions/http-status-code";
+import dateGenerate from "../../package/patterns/date-generate";
+import moment from "moment-timezone";
 
 export class OrderRepository implements OrderInterface {
     private constructor(private readonly repository: PrismaClient) {}
@@ -35,7 +37,7 @@ export class OrderRepository implements OrderInterface {
         if (!user) {
             throw new HttpException(
                 "usuário não localizado",
-                StatusCode.BAD_REQUEST,
+                StatusCode.BAD_REQUEST
             );
         }
 
@@ -66,7 +68,7 @@ export class OrderRepository implements OrderInterface {
         if (!order) {
             throw new HttpException(
                 "pedido não localizado com esse id",
-                StatusCode.NOT_FOUND,
+                StatusCode.NOT_FOUND
             );
         }
 
@@ -95,7 +97,7 @@ export class OrderRepository implements OrderInterface {
         schedulingDateOut?: Date,
         createdDateIn?: Date,
         createdDateOut?: Date,
-        status?: Status,
+        status?: Status
     ): Promise<ListOrderOutput> {
         const orderArgs: Prisma.ContractFindManyArgs = {
             where: {
@@ -104,7 +106,7 @@ export class OrderRepository implements OrderInterface {
                 },
             },
             orderBy: {
-                createdAt: "asc",
+                installationDate: "desc",
             },
             take: limit,
             skip: (page - 1) * limit,
@@ -134,34 +136,58 @@ export class OrderRepository implements OrderInterface {
             orderArgs.where = {
                 ...orderArgs.where,
                 installationDate: {
-                    gte: schedulingDateIn,
-                    lte: schedulingDateOut,
+                    gte: moment(schedulingDateIn)
+                        .tz("America/Sao_Paulo")
+                        .add(1, "day")
+                        .toISOString(),
+                    lte: moment(schedulingDateOut)
+                        .tz("America/Sao_Paulo")
+                        .add(1, "day")
+                        .toISOString(),
                 },
             };
 
             countArgs.where = {
                 ...countArgs.where,
                 installationDate: {
-                    gte: schedulingDateIn,
-                    lte: schedulingDateOut,
+                    gte: moment(schedulingDateIn)
+                        .tz("America/Sao_Paulo")
+                        .add(1, "day")
+                        .toISOString(),
+                    lte: moment(schedulingDateOut)
+                        .tz("America/Sao_Paulo")
+                        .add(1, "day")
+                        .toISOString(),
                 },
             };
         }
 
-        if (createdDateOut && createdDateOut) {
+        if (createdDateIn && createdDateOut) {
             orderArgs.where = {
                 ...orderArgs.where,
                 createdAt: {
-                    gte: createdDateIn,
-                    lte: createdDateOut,
+                    gte: moment(createdDateIn)
+                        .tz("America/Sao_Paulo")
+                        .add(1, "day")
+                        .toISOString(),
+                    lte: moment(createdDateOut)
+                        .tz("America/Sao_Paulo")
+                        .add(1, "day")
+                        .toISOString(),
                 },
             };
 
             countArgs.where = {
                 ...countArgs.where,
                 createdAt: {
-                    gte: createdDateIn,
-                    lte: createdDateOut,
+                    gte: moment(createdDateIn)
+                        .tz("America/Sao_Paulo")
+                        .add(1, "day")
+                        .toISOString(),
+                    lte: moment(createdDateOut)
+                        .tz("America/Sao_Paulo")
+                        .add(1, "day")
+                        .toISOString(),
                 },
             };
         }
@@ -205,7 +231,7 @@ export class OrderRepository implements OrderInterface {
         local: string,
         price: number,
         contact: string,
-        updatedAt: Date,
+        updatedAt: Date
     ): Promise<void> {
         await this.find(id);
 
@@ -226,7 +252,7 @@ export class OrderRepository implements OrderInterface {
     public async updateStatus(
         id: string,
         status: Status,
-        updatedAt: Date,
+        updatedAt: Date
     ): Promise<void> {
         await this.find(id);
 
@@ -245,7 +271,7 @@ export class OrderRepository implements OrderInterface {
         id: string,
         schedulingDate: Date,
         schedulingTime: string,
-        updatedAt: Date,
+        updatedAt: Date
     ): Promise<void> {
         await this.find(id);
 

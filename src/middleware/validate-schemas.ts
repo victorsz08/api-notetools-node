@@ -23,7 +23,7 @@ export function ValidateSchema(
                     message: `${issue.message}`,
                 }));
 
-                return res.status(403).json({
+                return res.status(400).json({
                     error: "campos preenchidos incorretamente",
                     details: errorMessages,
                 });
