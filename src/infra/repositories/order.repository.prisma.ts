@@ -136,12 +136,14 @@ export class OrderRepository implements OrderInterface {
             orderArgs.where = {
                 ...orderArgs.where,
                 installationDate: {
-                    gte: moment(schedulingDateIn)
-                        .tz("America/Sao_Paulo")
+                    gte: moment
+                        .tz(schedulingDateIn, "America/Sao_Paulo")
+                        .startOf("day")
                         .add(1, "day")
                         .toISOString(),
-                    lte: moment(schedulingDateOut)
-                        .tz("America/Sao_Paulo")
+                    lte: moment
+                        .tz(schedulingDateOut, "America/Sao_Paulo")
+                        .endOf("day")
                         .add(1, "day")
                         .toISOString(),
                 },
@@ -150,12 +152,14 @@ export class OrderRepository implements OrderInterface {
             countArgs.where = {
                 ...countArgs.where,
                 installationDate: {
-                    gte: moment(schedulingDateIn)
-                        .tz("America/Sao_Paulo")
+                    gte: moment
+                        .tz(schedulingDateIn, "America/Sao_Paulo")
+                        .startOf("day")
                         .add(1, "day")
                         .toISOString(),
-                    lte: moment(schedulingDateOut)
-                        .tz("America/Sao_Paulo")
+                    lte: moment
+                        .tz(schedulingDateOut, "America/Sao_Paulo")
+                        .endOf("day")
                         .add(1, "day")
                         .toISOString(),
                 },
@@ -166,12 +170,14 @@ export class OrderRepository implements OrderInterface {
             orderArgs.where = {
                 ...orderArgs.where,
                 createdAt: {
-                    gte: moment(createdDateIn)
-                        .tz("America/Sao_Paulo")
+                    gte: moment
+                        .tz(createdDateIn, "America/Sao_Paulo")
+                        .startOf("day")
                         .add(1, "day")
                         .toISOString(),
-                    lte: moment(createdDateOut)
-                        .tz("America/Sao_Paulo")
+                    lte: moment
+                        .tz(createdDateOut, "America/Sao_Paulo")
+                        .endOf("day")
                         .add(1, "day")
                         .toISOString(),
                 },
@@ -180,12 +186,14 @@ export class OrderRepository implements OrderInterface {
             countArgs.where = {
                 ...countArgs.where,
                 createdAt: {
-                    gte: moment(createdDateIn)
-                        .tz("America/Sao_Paulo")
+                    gte: moment
+                        .tz(createdDateIn, "America/Sao_Paulo")
+                        .startOf("day")
                         .add(1, "day")
                         .toISOString(),
-                    lte: moment(createdDateOut)
-                        .tz("America/Sao_Paulo")
+                    lte: moment
+                        .tz(createdDateOut, "America/Sao_Paulo")
+                        .endOf("day")
                         .add(1, "day")
                         .toISOString(),
                 },

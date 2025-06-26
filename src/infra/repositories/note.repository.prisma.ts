@@ -76,7 +76,7 @@ export class NoteRepository implements NoteInterface {
                 user: { id: userId },
             },
             orderBy: {
-                createdAt: "asc",
+                createdAt: "desc",
             },
             take: limit,
             skip: (page - 1) * limit,
