@@ -51,7 +51,7 @@ export const updateOrderSchema = z.object({
 });
 
 export const updateStatusSchema = z.object({
-    status: z.enum(["PENDENTE", "CONECTADO", "PENDENTE"]),
+    status: z.enum(["PENDENTE", "CONECTADO", "CANCELADO"]),
 });
 
 export const updateSchedulingSchema = z.object({
@@ -75,7 +75,7 @@ export const listOrderSchema = z.object({
     limit: z.coerce
         .number()
         .min(1, { message: "O limite deve ser maior que 0" }),
-    status: z.enum(["PENDENTE", "CONECTADO", "PENDENTE"]).optional(),
+    status: z.enum(["PENDENTE", "CONECTADO", "CANCELADO"]).optional(),
     schedulingDateIn: z.coerce.date().optional(),
     schedulingDateOut: z.coerce.date().optional(),
     createdDateIn: z.coerce.date().optional(),
