@@ -16,7 +16,7 @@ export class ApiExpress implements Api {
 
         this.app.use(
             cors({
-                origin: "http://localhost:3000",
+                origin: process.env.ORIGIN",
                 credentials: true,
                 allowedHeaders: ["Content-Type", "Authorization"],
                 methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
