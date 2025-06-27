@@ -28,7 +28,7 @@ export class AuthLoginRoute implements Route {
 
             res.cookie("nt.authtoken", output.token, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
+                secure: true,
                 maxAge: 1000 * 60 * 60 * 24, // 1 day
                 path: "/",
                 sameSite: "none"
