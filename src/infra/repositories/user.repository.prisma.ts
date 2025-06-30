@@ -23,7 +23,7 @@ export class UserRepository implements UserInterface {
         if (usernameAlreadyExists) {
             throw new HttpException(
                 "username indisponível",
-                StatusCode.CONFLICT,
+                StatusCode.CONFLICT
             );
         }
 
@@ -51,7 +51,7 @@ export class UserRepository implements UserInterface {
         if (!user) {
             throw new HttpException(
                 "usuário não localizado",
-                StatusCode.NOT_FOUND,
+                StatusCode.NOT_FOUND
             );
         }
 
@@ -61,6 +61,7 @@ export class UserRepository implements UserInterface {
             firstName: user.name,
             lastName: user.lastname,
             role: user.role as Role,
+            avatarUrl: user.avatarImageUrl || "",
             password: user.password,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
@@ -72,7 +73,7 @@ export class UserRepository implements UserInterface {
     public async list(
         page: number,
         limit: number,
-        search?: string,
+        search?: string
     ): Promise<ListUserOutput> {
         const userArgs: Prisma.UserFindManyArgs = {
             where: {},
@@ -145,6 +146,7 @@ export class UserRepository implements UserInterface {
                 lastName: user.lastname,
                 role: user.role as Role,
                 password: user.password,
+                avatarUrl: user.avatarImageUrl || "",
                 createdAt: user.createdAt,
                 updatedAt: user.updatedAt,
             });
@@ -166,18 +168,18 @@ export class UserRepository implements UserInterface {
         username: string,
         firstName: string,
         lastName: string,
-        updatedAt: Date,
+        updatedAt: Date
     ): Promise<void> {
         const user = await this.find(id);
         if (user.username !== username) {
             const usernameAlreadyExists = await this.repository.user.findUnique(
-                { where: { username } },
+                { where: { username } }
             );
 
             if (usernameAlreadyExists) {
                 throw new HttpException(
                     "username indisponível",
-                    StatusCode.CONFLICT,
+                    StatusCode.CONFLICT
                 );
             }
         }
@@ -197,7 +199,7 @@ export class UserRepository implements UserInterface {
     public async updatePassword(
         id: string,
         password: string,
-        updatedAt: Date,
+        updatedAt: Date
     ): Promise<void> {
         await this.find(id);
 
@@ -216,6 +218,19 @@ export class UserRepository implements UserInterface {
         await this.find(id);
 
         await this.repository.user.delete({ where: { id } });
+
+        return;
+    }
+
+    public async updateAvatar(id: string, avatarUrl: string): Promise<void> {
+        await this.find(id);
+
+        await this.repository.user.update({
+            where: { id },
+            data: {
+                avatarImageUrl: avatarUrl,
+            },
+        });
 
         return;
     }

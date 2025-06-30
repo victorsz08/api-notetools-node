@@ -46,6 +46,7 @@ model User {
   createdAt    DateTime
   updatedAt    DateTime
   team_id      String?
+  avatarImageUrl String?
   accessStatus AccessStatus? @default(ACTIVE)
   Contract     Contract[]
   Goals        Goals[]

@@ -56,6 +56,8 @@ import { GrantedUserAccessUsecase } from "../usecases/admin/granted-user-access.
 import { RecoveryPasswordRoute } from "../infra/api/express/routes/admin/recovery-password.route.express";
 import { GrantedUserAccessRoute } from "../infra/api/express/routes/admin/granted-user-access.route.express";
 import { GetCitiesRoute } from "../infra/api/express/routes/cities/get-cities.route.express";
+import { UpdateAvatarUserUsecase } from "../usecases/user/update-avatar.usecase";
+import { UpdateAvatarUserRoute } from "../infra/api/express/routes/user/update-avatar.route.express";
 
 // repositories
 const userRepository = UserRepository.build(prisma);
@@ -83,6 +85,7 @@ const listUserUsecase = ListUserUsecase.build(userRepository);
 const updateUserUsecase = UpdateUserUsecase.build(userRepository);
 const updatePasswordUsecase = UpdatePasswordUsecase.build(userRepository);
 const deleteUserUsecase = DeleteUserUsecase.build(userRepository);
+const updateAvatarUserUsecase = UpdateAvatarUserUsecase.build(userRepository);
 
 // auth
 const authLoginUsecase = AuthLoginUsecase.build(authRepository);
@@ -126,6 +129,9 @@ const listUserRoute = ListUserRoute.build(listUserUsecase);
 const updateUserRoute = UpdateUserRoute.build(updateUserUsecase);
 const updatePasswordRoute = UpdatePasswordRoute.build(updatePasswordUsecase);
 const deleteUserRoute = DeleteUserRoute.build(deleteUserUsecase);
+const updateAvatarUserRoute = UpdateAvatarUserRoute.build(
+    updateAvatarUserUsecase
+);
 
 // auths
 const authLoginRoute = AuthLoginRoute.build(authLoginUsecase);
@@ -173,6 +179,7 @@ export const routes = [
     updateUserRoute,
     updatePasswordRoute,
     deleteUserRoute,
+    updateAvatarUserRoute,
     authLoginRoute,
     authLogoutRoute,
     authSessionRoute,

@@ -11,6 +11,7 @@ export type FindUserOutputDto = {
     username: string;
     firstName: string;
     lastName: string;
+    avatarUrl: string;
     role: string;
     createdAt: string;
     updatedAt: string;

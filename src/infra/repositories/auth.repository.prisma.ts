@@ -44,6 +44,7 @@ export class AuthRepository implements AuthInterface {
                 firstName: user.name,
                 lastName: user.lastname,
                 role: user.role,
+                avatarUrl: user.avatarImageUrl,
             },
             config.secret,
             { expiresIn: "1d" }

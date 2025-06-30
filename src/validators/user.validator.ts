@@ -59,3 +59,8 @@ export const updatePasswordSchema = z.object({
             "A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial"
         ),
 });
+
+
+export const updateAvatarSchema = z.object({
+    avatarUrl: z.string().nonempty("A url da imagem é obrigatória"),
+});

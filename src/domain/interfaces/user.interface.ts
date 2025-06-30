@@ -17,12 +17,13 @@ export interface UserInterface {
         username: string,
         firstName: string,
         lastName: string,
-        updatedAt: Date,
+        updatedAt: Date
     ): Promise<void>;
     updatePassword(
         id: string,
         password: string,
-        updatedAt: Date,
+        updatedAt: Date
     ): Promise<void>;
+    updateAvatar(id: string, avatarUrl: string): Promise<void>;
     delete(id: string): Promise<void>;
 }

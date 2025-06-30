@@ -8,6 +8,7 @@ export type UserDto = {
     firstName: string;
     lastName: string;
     role: string;
+    avatarUrl: string;
     createdAt: string;
     updatedAt: string;
 };
@@ -25,6 +26,7 @@ class UserMapper {
             firstName: user.firstName,
             lastName: user.lastName,
             role: UserRole[user.role],
+            avatarUrl: user.avatarUrl,
             createdAt: dateGenerate.format(user.createdAt),
             updatedAt: dateGenerate.format(user.updatedAt),
         };
