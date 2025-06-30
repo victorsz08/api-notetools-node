@@ -7,6 +7,7 @@ import cors from "cors";
 import { rateLimit } from "express-rate-limit";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocs from "../../../../swagger.json";
+import helmet from "helmet";
 
 export class ApiExpress implements Api {
     private app: Express;
@@ -18,19 +19,21 @@ export class ApiExpress implements Api {
             cors({
                 origin: process.env.ORIGIN || "https://74swhr-3000.csb.app",
                 credentials: true,
-                allowedHeaders: ["Content-Type", "Authorization"],
+                allowedHeaders: ["Content-Type", "Authorization", "SetCookie"],
                 methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             })
         );
 
-        // this.app.use(
-        //     rateLimit({
-        //         windowMs: 5 * 60 * 1000, // 5min,
-        //         limit: 80,
-        //         standardHeaders: "draft-8",
-        //         legacyHeaders: false,
-        //     })
-        // );
+        this.app.use(helmet());
+
+        this.app.use(
+            rateLimit({
+                windowMs: 5 * 60 * 1000, // 5min,
+                limit: 100,
+                standardHeaders: "draft-8",
+                legacyHeaders: false,
+            })
+        );
 
         this.app.use(
             "/api-docs",
