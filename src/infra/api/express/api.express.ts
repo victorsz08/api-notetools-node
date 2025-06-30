@@ -18,8 +18,7 @@ export class ApiExpress implements Api {
         this.app.use(
             cors({
                 origin: process.env.ORIGIN || "https://74swhr-3000.csb.app",
-                credentials: true,
-                allowedHeaders: ["Content-Type", "Authorization", "SetCookie"],
+                allowedHeaders: ["Content-Type", "Authorization"],
                 methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             })
         );

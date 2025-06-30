@@ -25,15 +25,7 @@ export class AuthLoginRoute implements Route {
             const input = authLoginSchema.parse(body);
 
             const output = await this.authLoginUsecase.execute(input);
-
-            res.cookie("nt.authtoken", output.token, {
-                httpOnly: true,
-                secure: true,
-                maxAge: 1000 * 60 * 60 * 24, // 1 day
-                path: "/",
-                sameSite: "none"
-            });
-            return res.status(200).send();
+            return res.status(200).json(output);
         };
     }
 
