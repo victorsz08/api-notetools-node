@@ -14,17 +14,15 @@ export class ApiExpress implements Api {
 
     private constructor(routes: Route[]) {
         this.app = express();
-
         this.app.use(
             cors({
-                origin: process.env.ORIGIN || "https://74swhr-3000.csb.app",
-                allowedHeaders: ["Content-Type", "Authorization"],
+                origin: process.env.ORIGIN,
+                allowedHeaders: ["Content-Type", "application/json"],
                 methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             })
         );
 
         this.app.use(helmet());
-
         this.app.use(
             rateLimit({
                 windowMs: 5 * 60 * 1000, // 5min,
