@@ -28,9 +28,9 @@ export class AuthLoginRoute implements Route {
             res.cookie("nt.authtoken", output.token, {
                 httpOnly: true,
                 sameSite: "none",
-                maxAge: 60 * 60 * 60 * 7,
+                maxAge: 60 * 60 * 24 * 7,
                 secure: true,
-                domain: "*.onrender.com",
+                path: "/",
             });
 
             return res.status(200).send();
