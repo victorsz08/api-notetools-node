@@ -16,8 +16,13 @@ export class AuthSessionRoute implements Route {
 
     public getHandler(): (req: Request, res: Response) => Promise<any> {
         return async (req: Request, res: Response) => {
-            const token = req.cookies["nt.authtoken"];
-            const session = verify(token, config.secret);
+            const token = req.headers.authorization;
+            if (!token) {
+                return res.status(401).json({ error: "Token não localizado" });
+            }
+
+            const accessToken = token.split(" ")[1];
+            const session = verify(accessToken, config.secret);
 
             return res.status(200).json(session);
         };
