@@ -10,6 +10,7 @@ export function Logger() {
         }
 
         const accessToken = token.split(" ")[1];
+        console.log("token: ", token);
 
         try {
             verify(accessToken, config.secret);
