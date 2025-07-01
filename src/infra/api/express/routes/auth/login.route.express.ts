@@ -3,6 +3,7 @@ import { HttpMethod, Route } from "../route.express";
 import { AuthLoginUsecase } from "../../../../../usecases/auth/login.usecase";
 import { authLoginSchema } from "../../../../../validators/auth.validator";
 import { ValidateSchema } from "../../../../../middleware/validate-schemas";
+import moment from "moment-timezone";
 
 export class AuthLoginRoute implements Route {
     private constructor(
@@ -31,6 +32,8 @@ export class AuthLoginRoute implements Route {
                 maxAge: 60 * 60 * 24 * 7,
                 secure: true,
                 path: "/",
+                domain: ".vercel.app",
+                expires: moment().add(7, "day").toDate(),
             });
 
             return res.status(200).send();
