@@ -14,7 +14,7 @@ export class ApiExpress implements Api {
 
     private constructor(routes: Route[]) {
         this.app = express();
-        this.app.use(helmet({ crossOriginResourcePolicy: false }));
+
         this.app.use(
             cors({
                 origin: process.env.ORIGIN,
