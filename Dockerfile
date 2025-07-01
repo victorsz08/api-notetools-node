@@ -5,7 +5,6 @@ WORKDIR /app
 # Copia schema do Prisma ANTES da instalação (necessário por causa do postinstall)
 COPY package*.json ./
 COPY prisma ./prisma
-COPY .env ./
 
 RUN npm install
 
