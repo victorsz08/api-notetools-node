@@ -14,17 +14,17 @@ export class ApiExpress implements Api {
 
     private constructor(routes: Route[]) {
         this.app = express();
+        this.app.use(helmet({ crossOriginResourcePolicy: false }));
         this.app.use(
             cors({
                 origin: process.env.ORIGIN,
-                allowedHeaders: ["Content-Type", "application/json"],
+                allowedHeaders: ["Content-Type", "Authorization"],
                 methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             })
         );
 
         console.log(process.env.ORIGIN);
 
-        this.app.use(helmet());
         this.app.use(
             rateLimit({
                 windowMs: 5 * 60 * 1000, // 5min,
