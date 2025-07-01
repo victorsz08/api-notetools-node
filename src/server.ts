@@ -1,6 +1,6 @@
 import { ApiExpress } from "./infra/api/express/api.express";
 import { routes } from "./module/main.module";
-
+import "dotenv/config";
 function main() {
     const api = ApiExpress.build(routes);
 

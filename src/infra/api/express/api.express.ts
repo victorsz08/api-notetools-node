@@ -22,6 +22,8 @@ export class ApiExpress implements Api {
             })
         );
 
+        console.log(process.env.ORIGIN);
+
         this.app.use(helmet());
         this.app.use(
             rateLimit({
