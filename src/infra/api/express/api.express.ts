@@ -14,7 +14,6 @@ export class ApiExpress implements Api {
 
     private constructor(routes: Route[]) {
         this.app = express();
-        this.app.use(helmet());
         this.app.use(
             cors({
                 origin: process.env.ORIGIN,
@@ -23,8 +22,6 @@ export class ApiExpress implements Api {
                 credentials: true,
             })
         );
-
-        console.log(process.env.ORIGIN);
 
         this.app.use(
             rateLimit({

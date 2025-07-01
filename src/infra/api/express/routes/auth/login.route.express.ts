@@ -32,8 +32,6 @@ export class AuthLoginRoute implements Route {
                 maxAge: 60 * 60 * 24 * 7,
                 secure: true,
                 path: "/",
-                domain: ".vercel.app",
-                expires: moment().add(7, "day").toDate(),
             });
 
             return res.status(200).send();
