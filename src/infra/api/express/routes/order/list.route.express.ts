@@ -4,6 +4,9 @@ import { ListOrderUsecase } from "../../../../../usecases/order/list.usecase";
 import { listOrderSchema } from "../../../../../validators/order.validator";
 import { Logger } from "../../../../../middleware/logger";
 import { ValidateSchema } from "../../../../../middleware/validate-schemas";
+import { verify } from "jsonwebtoken";
+import { config } from "../../../../../../prisma/config/config";
+import { UserDto } from "../../../../../package/mapper/user-mapper";
 
 export class ListOrderRoute implements Route {
     private constructor(
@@ -14,7 +17,7 @@ export class ListOrderRoute implements Route {
 
     public static build(listOrderUsecase: ListOrderUsecase) {
         return new ListOrderRoute(
-            "/orders/list/:userId",
+            "/orders/list",
             HttpMethod.GET,
             listOrderUsecase
         );
@@ -22,15 +25,16 @@ export class ListOrderRoute implements Route {
 
     public getHandler(): (req: Request, res: Response) => Promise<any> {
         return async (req: Request, res: Response) => {
-            const { userId } = req.params;
             const query = req.query;
+            const token = req.cookies["nt.authtoken"];
+            const decodedToken = verify(config.secret, token) as UserDto;
+            const userId = decodedToken.id;
 
             const input = listOrderSchema.parse(query);
             const orders = await this.listOrderUsecase.execute({
                 ...input,
                 userId,
             });
-
 
             return res.status(200).json(orders);
         };

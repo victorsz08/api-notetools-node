@@ -4,6 +4,9 @@ import { HttpMethod, Route } from "../route.express";
 import { getInsightSchema } from "../../../../../validators/insight.validator";
 import { Logger } from "../../../../../middleware/logger";
 import { ValidateSchema } from "../../../../../middleware/validate-schemas";
+import { verify } from "jsonwebtoken";
+import { config } from "../../../../../../prisma/config/config";
+import { UserDto } from "../../../../../package/mapper/user-mapper";
 
 export class GetStatusInsightRoute implements Route {
     private constructor(
@@ -22,8 +25,10 @@ export class GetStatusInsightRoute implements Route {
 
     public getHandler(): (req: Request, res: Response) => Promise<any> {
         return async (req: Request, res: Response) => {
-            const { userId } = req.params;
             const query = req.query;
+            const token = req.cookies["nt.authtoken"];
+            const decodedToken = verify(config.secret, token) as UserDto;
+            const userId = decodedToken.id;
 
             const input = getInsightSchema.parse(query);
             const data = await this.getStatusInsightUsecase.execute({

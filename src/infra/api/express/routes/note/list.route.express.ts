@@ -4,6 +4,9 @@ import { HttpMethod, Route } from "../route.express";
 import { listNoteSchema } from "../../../../../validators/note.validator";
 import { Logger } from "../../../../../middleware/logger";
 import { ValidateSchema } from "../../../../../middleware/validate-schemas";
+import { verify } from "jsonwebtoken";
+import { UserDto } from "../../../../../package/mapper/user-mapper";
+import { config } from "../../../../../../prisma/config/config";
 
 export class ListNoteRoute implements Route {
     private constructor(
@@ -22,8 +25,10 @@ export class ListNoteRoute implements Route {
 
     public getHandler(): (req: Request, res: Response) => Promise<any> {
         return async (req: Request, res: Response) => {
-            const { userId } = req.params;
             const query = req.query;
+            const token = req.cookies["nt.authtoken"];
+            const decodedToken = verify(config.secret, token) as UserDto;
+            const userId = decodedToken.id;
 
             const input = listNoteSchema.parse(query);
             const data = await this.listNoteUsecase.execute({

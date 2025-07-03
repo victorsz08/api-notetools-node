@@ -58,6 +58,7 @@ import { GrantedUserAccessRoute } from "../infra/api/express/routes/admin/grante
 import { GetCitiesRoute } from "../infra/api/express/routes/cities/get-cities.route.express";
 import { UpdateAvatarUserUsecase } from "../usecases/user/update-avatar.usecase";
 import { UpdateAvatarUserRoute } from "../infra/api/express/routes/user/update-avatar.route.express";
+import { RefreshTokenRoute } from "../infra/api/express/routes/auth/refresh.route.express";
 
 // repositories
 const userRepository = UserRepository.build(prisma);
@@ -137,6 +138,7 @@ const updateAvatarUserRoute = UpdateAvatarUserRoute.build(
 const authLoginRoute = AuthLoginRoute.build(authLoginUsecase);
 const authLogoutRoute = AuthLogoutRoute.build();
 const authSessionRoute = AuthSessionRoute.build();
+const authRefreshTokenRoute = RefreshTokenRoute.build();
 
 // notes
 const createNoteRoute = CreateNoteRoute.build(createNoteUsecase);
@@ -183,6 +185,7 @@ export const routes = [
     authLoginRoute,
     authLogoutRoute,
     authSessionRoute,
+    authRefreshTokenRoute,
     createNoteRoute,
     findNoteRoute,
     listNoteRoute,

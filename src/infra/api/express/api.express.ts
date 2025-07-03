@@ -19,6 +19,7 @@ export class ApiExpress implements Api {
                 origin: process.env.ORIGIN,
                 allowedHeaders: ["Content-Type", "Authorization"],
                 methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+                credentials: true,
             })
         );
 

@@ -16,6 +16,6 @@ export interface Route {
     getMiddlewares(): ((
         req: Request,
         res: Response,
-        next: NextFunction,
+        next: NextFunction
     ) => Promise<T>)[];
 }
