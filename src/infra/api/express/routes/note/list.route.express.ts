@@ -17,7 +17,7 @@ export class ListNoteRoute implements Route {
 
     public static build(listNoteUsecase: ListNoteUsecase) {
         return new ListNoteRoute(
-            "/notes/list/:userId",
+            "/notes/list",
             HttpMethod.GET,
             listNoteUsecase
         );

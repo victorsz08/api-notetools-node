@@ -17,7 +17,7 @@ export class GetInsightRoute implements Route {
 
     public static build(getInsightUsecase: GetInsightUsecase) {
         return new GetInsightRoute(
-            "/insights/:userId",
+            "/insights",
             HttpMethod.GET,
             getInsightUsecase
         );

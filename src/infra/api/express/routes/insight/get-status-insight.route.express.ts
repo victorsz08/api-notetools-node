@@ -17,7 +17,7 @@ export class GetStatusInsightRoute implements Route {
 
     public static build(getStatusInsightUsecase: GetStatusInsightUsecase) {
         return new GetStatusInsightRoute(
-            "/insights/status/:userId",
+            "/insights/status",
             HttpMethod.GET,
             getStatusInsightUsecase
         );
