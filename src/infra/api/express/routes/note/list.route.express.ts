@@ -27,7 +27,7 @@ export class ListNoteRoute implements Route {
         return async (req: Request, res: Response) => {
             const query = req.query;
             const token = req.cookies["nt.authtoken"];
-            const decodedToken = verify(config.secret, token) as UserDto;
+           const decodedToken = verify(token, config.secret) as UserDto;
             const userId = decodedToken.id;
 
             const input = listNoteSchema.parse(query);

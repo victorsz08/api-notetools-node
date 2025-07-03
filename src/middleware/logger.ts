@@ -10,8 +10,8 @@ export function Logger() {
         }
 
         try {
-            verify(token, config.secret);
-
+            const decode = verify(token, config.secret);
+            console.log(decode);
             next();
         } catch (error) {
             return res.status(401).json({ error: "usuário não autorizado" });

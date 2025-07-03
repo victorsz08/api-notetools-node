@@ -24,7 +24,7 @@ export class RefreshTokenRoute implements Route {
         return async (req: Request, res: Response) => {
             const token = req.cookies["nt.authtoken"];
             const payload = verify(token, config.secret) as { id: string, role: string };
-
+            console.log(payload);
             const refreshToken = sign({ 
                 id: payload.id,
                 role: payload.role,
