@@ -28,7 +28,6 @@ export class GetInsightRoute implements Route {
             const query = req.query;
             const token = req.cookies["nt.authtoken"];
             const decodedToken = verify(token, config.secret) as UserDto;
-            console.log(decodedToken);
             const userId = decodedToken.id;
 
             const input = getInsightSchema.parse(query);
