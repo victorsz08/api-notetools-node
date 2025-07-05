@@ -17,7 +17,7 @@ export class ListOrderRoute implements Route {
 
     public static build(listOrderUsecase: ListOrderUsecase) {
         return new ListOrderRoute(
-            "/orders/list",
+            "/list-orders",
             HttpMethod.GET,
             listOrderUsecase
         );

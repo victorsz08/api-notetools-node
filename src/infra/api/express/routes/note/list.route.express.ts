@@ -17,7 +17,7 @@ export class ListNoteRoute implements Route {
 
     public static build(listNoteUsecase: ListNoteUsecase) {
         return new ListNoteRoute(
-            "/notes/list",
+            "/list-notes",
             HttpMethod.GET,
             listNoteUsecase
         );
@@ -27,7 +27,7 @@ export class ListNoteRoute implements Route {
         return async (req: Request, res: Response) => {
             const query = req.query;
             const token = req.cookies["nt.authtoken"];
-           const decodedToken = verify(token, config.secret) as UserDto;
+            const decodedToken = verify(token, config.secret) as UserDto;
             const userId = decodedToken.id;
 
             const input = listNoteSchema.parse(query);
