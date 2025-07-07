@@ -14,8 +14,8 @@ export class UpdateStatusRoute implements Route {
 
     public static build(updateStatusUsecase: UpdateStatusUsecase) {
         return new UpdateStatusRoute(
-            "/order/update-status/:id",
-            HttpMethod.POST,
+            "/orders/update-status/:id",
+            HttpMethod.PUT,
             updateStatusUsecase
         );
     }
