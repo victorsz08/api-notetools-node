@@ -16,7 +16,10 @@ export class ApiExpress implements Api {
         this.app = express();
         this.app.use(
             cors({
-                origin: process.env.ORIGIN,
+                origin: [
+                    "https://symmetrical-space-tribble-5wr7xxgj4gvcvr4j-5173.app.github.dev",
+                    process.env.ORIGIN!,
+                ],
                 allowedHeaders: ["Content-Type", "Authorization"],
                 methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
                 credentials: true,
