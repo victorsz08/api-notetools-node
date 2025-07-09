@@ -23,14 +23,14 @@ export class ApiExpress implements Api {
             })
         );
 
-        this.app.use(
-            rateLimit({
-                windowMs: 5 * 60 * 1000, // 5min,
-                limit: 100,
-                standardHeaders: "draft-8",
-                legacyHeaders: false,
-            })
-        );
+        // this.app.use(
+        //     rateLimit({
+        //         windowMs: 5 * 60 * 1000, // 5min,
+        //         limit: 100,
+        //         standardHeaders: "draft-8",
+        //         legacyHeaders: false,
+        //     })
+        // );
 
         this.app.use(
             "/api-docs",
