@@ -157,4 +157,66 @@ export class InsightRepository implements InsightInterface {
             sales,
         };
     }
+
+    public async getTrendingInsight(userId: string): Promise<{
+        sales: { previous: number; last: number; trend: number };
+        revenue: { previous: number; last: number; trend: number };
+        completionRate: { previous: number; last: number; trend: number };
+    }> {
+        const now = moment();
+        const startOfLastMonth = now
+            .clone()
+            .subtract(1, "month")
+            .startOf("month")
+            .toDate();
+        const endOfLastMonth = now
+            .clone()
+            .subtract(1, "month")
+            .endOf("month")
+            .toDate();
+        const startOfPreviousMonth = now
+            .clone()
+            .subtract(2, "month")
+            .startOf("month")
+            .toDate();
+        const endOfPreviousMonth = now
+            .clone()
+            .subtract(2, "month")
+            .endOf("month")
+            .toDate();
+
+        const last = await this.getInsight(
+            userId,
+            startOfLastMonth,
+            endOfLastMonth
+        );
+        const previous = await this.getInsight(
+            userId,
+            startOfPreviousMonth,
+            endOfPreviousMonth
+        );
+
+        function calcTrend(prev: number, curr: number): number {
+            if (prev === 0) return curr === 0 ? 0 : 100;
+            return Number((((curr - prev) / prev) * 100).toFixed(2));
+        }
+
+        return {
+            sales: {
+                previous: previous.sales,
+                last: last.sales,
+                trend: calcTrend(previous.sales, last.sales),
+            },
+            revenue: {
+                previous: previous.revenue,
+                last: last.revenue,
+                trend: calcTrend(previous.revenue, last.revenue),
+            },
+            completionRate: {
+                previous: previous.completionRate,
+                last: last.completionRate,
+                trend: calcTrend(previous.completionRate, last.completionRate),
+            },
+        };
+    }
 }

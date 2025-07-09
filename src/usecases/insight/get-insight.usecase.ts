@@ -35,3 +35,29 @@ export class GetInsightUsecase
         return data;
     }
 }
+
+export class GetTrendingInsightUsecase
+    implements
+        Usecase<
+            { userId: string },
+            {
+                sales: { previous: number; last: number; trend: number };
+                revenue: { previous: number; last: number; trend: number };
+                completionRate: {
+                    previous: number;
+                    last: number;
+                    trend: number;
+                };
+            }
+        >
+{
+    private constructor(private readonly insightInterface: InsightInterface) {}
+
+    public static build(insightInterface: InsightInterface) {
+        return new GetTrendingInsightUsecase(insightInterface);
+    }
+
+    public async execute(input: { userId: string }) {
+        return this.insightInterface.getTrendingInsight(input.userId);
+    }
+}
