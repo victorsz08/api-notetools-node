@@ -17,6 +17,7 @@ export class ApiExpress implements Api {
         this.app.use(
             cors({
                 origin: [
+                    "http://localhost:5173",
                     "https://symmetrical-space-tribble-5wr7xxgj4gvcvr4j-5173.app.github.dev",
                     process.env.ORIGIN!,
                 ],
