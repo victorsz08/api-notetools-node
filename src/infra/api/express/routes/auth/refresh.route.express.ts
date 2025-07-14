@@ -23,24 +23,32 @@ export class RefreshTokenRoute implements Route {
     public getHandler(): (req: Request, res: Response) => Promise<any> {
         return async (req: Request, res: Response) => {
             const token = req.cookies["nt.authtoken"];
+            if (!token) {
+                return res.status(401).send();
+            }
+
             const payload = verify(token, config.secret) as {
                 id: string;
                 role: string;
             };
-            const refreshToken = sign({ 
-                id: payload.id,
-                role: payload.role,
-             }, config.secret, {
-                expiresIn: "1d",
-            });
+            const refreshToken = sign(
+                {
+                    id: payload.id,
+                    role: payload.role,
+                },
+                config.secret,
+                {
+                    expiresIn: "1d",
+                }
+            );
 
             res.cookie("nt.authtoken", refreshToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite:
-                    process.env.NODE_ENV === "production" ? "none" : "lax",
+                secure: true,
+                sameSite: "none",
                 expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
                 maxAge: 1000 * 60 * 60 * 24,
+                path: "/",
             });
 
             return res.status(200).send();
