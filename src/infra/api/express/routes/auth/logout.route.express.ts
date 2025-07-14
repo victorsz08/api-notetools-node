@@ -14,7 +14,7 @@ export class AuthLogoutRoute implements Route {
 
     public getHandler(): (req: Request, res: Response) => Promise<any> {
         return async (req: Request, res: Response) => {
-            res.clearCookie("nt.authtoken");
+            res.clearCookie("nt.authtoken", { path: "/" });
             return res.status(200).send();
         };
     }
