@@ -42,9 +42,8 @@ export class RefreshTokenRoute implements Route {
 
                 res.cookie("nt.authtoken", refreshToken, {
                     httpOnly: true,
-                    secure: process.env.NODE_ENV === "production",
-                    sameSite:
-                        process.env.NODE_ENV === "production" ? "none" : "lax",
+                    secure: true,
+                    sameSite: "none",
                     expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
                     maxAge: 1000 * 60 * 60 * 24,
                 });
