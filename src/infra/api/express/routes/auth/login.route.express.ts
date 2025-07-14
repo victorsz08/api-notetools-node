@@ -28,11 +28,11 @@ export class AuthLoginRoute implements Route {
             const output = await this.authLoginUsecase.execute(input);
             res.cookie("nt.authtoken", output.token, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite:
-                    process.env.NODE_ENV === "production" ? "none" : "lax",
+                secure: true,
+                sameSite: "none",
                 expires: moment().add(1, "days").toDate(),
                 maxAge: 1000 * 60 * 60 * 24,
+                path: "/",
             });
             return res.status(200).send();
         };
